@@ -1,8 +1,7 @@
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
 
-import Cookies from 'js-cookie';
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import AuthBox from "../../../components/auth-box";
 import Button from "../../../components/button";
@@ -10,37 +9,39 @@ import Input from "../../../components/input";
 
 import { Container } from "./styled";
 
-// import AuthApi from "../../../service/authApi";
-// const api = new AuthApi();
+import AdminApi from "../../../service/admin/userAdmin";
+const api = new AdminApi();
 
-export default function Register() {
+export default function Update() {
+    const [id, setId] = useState(0);
     const [name, setName] = useState("");
     const [cpf, setCpf] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [group, setGroup] = useState("");
+    const [userGroup, setUserGroup] = useState("");
+    
+    const location = useLocation();
+    const navigation = useNavigate();
 
     const options = ["ADMIN", "ESTOQUISTA"];
 
-    const navigation = useNavigate();
-
     const isFormCompleted = Object.values(
-        [email, password, confirmPassword, name, cpf, group]
-    ).every((value) => value.trim() !== "");
+        [email, password, confirmPassword, name, cpf, userGroup]
+    ).every((value) => value?.trim() !== "");
 
     const isInvalidEmail = () => {
         const emailRegex = /^[a-zA-Z0-9.+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
         return !emailRegex.test(email);
     }
 
-    const register = async () => {
+    const update = async () => {
         if (!isFormCompleted) {
             toast.warn("Preencha todos os campos !")
             return;
         }
 
-        if (password != confirmPassword) {
+        if (password !== confirmPassword) {
             toast.warn("As senhas não são iguais !")
             return;
         }
@@ -49,10 +50,43 @@ export default function Register() {
             toast.warn("O email deve ser bem formatado");
             return;
         }
+        
+        let response = await api.update(1, {
+            id,
+            name,
+            cpf,
+            email,
+            password,
+            userGroup  
+        })
 
-        toast.success("Registro inserido com sucesso!");
+        if (response.status !== 204) {
+            toast.warn(response.error);
+            console.log(response.message);
+            return;
+        }
+
+        toast.success("Usuário alterado com sucesso!");
         navigation("/admin/management");
     }
+
+    const handleUserInformation = () => {
+        if (!location.state) {
+            toast.warn("Selecione um usuário antes de alterar!");
+            navigation("/admin/management");
+            return;
+        }
+
+        setId(location.state[0].id);
+        setName(location.state[0].name);
+        setEmail(location.state[0].email);
+        setCpf(location.state[0].cpf);
+        setUserGroup(location.state[0].userGroup);
+    }
+
+    useEffect(() => {
+        handleUserInformation();
+    }, [])
 
     return (
         <Container>
@@ -60,7 +94,7 @@ export default function Register() {
                 <img src="/assets/images/icon_logo.png" alt="logo-image" />
             </Link>
             <AuthBox myWidth={40} myHeight={70}>
-                <h3> Acesse sua conta </h3>
+                <h3> Alterando usuário </h3>
                 <hr />
                 <div>
                     <Input
@@ -80,7 +114,7 @@ export default function Register() {
                         myMargin={"1.5em 0em"}
                         myHeight={7}
                         myWidth={28}
-                        myPlaceHolder="999.999.99-99"
+                        myPlaceHolder="999.999.999-99"
                     >
                         Seu CPF
                     </Input>
@@ -92,6 +126,7 @@ export default function Register() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="email@email.com"
+                        myDisabled={true}
                     >
                         Sua Email
                     </Input>
@@ -124,8 +159,8 @@ export default function Register() {
                         <label htmlFor="select">Escolha uma opção:</label>
                         <select
                             id="select"
-                            value={group}
-                            onChange={(e) => setGroup(e.target.value)}
+                            value={userGroup}
+                            onChange={(e) => setUserGroup(e.target.value)}
                         >
                             {options.map((option, index) => (
                                 <option key={index} value={option}>
@@ -140,10 +175,10 @@ export default function Register() {
                         myHeight={5}
                         myWidth={28.6}
                         myBackgroundColor={"#007bff"}
-                        myMethod={register}
+                        myMethod={update}
                         myColor={"#ffff"}
                     >
-                        Entrar
+                        Alterar
                     </Button>
                 </div>
             </AuthBox>

@@ -42,7 +42,7 @@ export default function Login() {
         toast.success("Login efetuado com sucesso");    
         
         // Colocar rota correta posteriormente
-        // navigation("/");
+        navigation("/admin/menu");
     }
 
     return(
@@ -75,8 +75,9 @@ export default function Login() {
                     <Button
                         myHeight={6}
                         myWidth={29}
-                        myBackgroundColor={"yellow"}
+                        myBackgroundColor={"#007bff"}
                         myMethod={login}
+                        myColor={"#ffff"}
                     >
                         Entrar
                     </Button>
