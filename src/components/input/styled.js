@@ -36,6 +36,13 @@ const Container = styled.div`
     input[type="number"] {
         -moz-appearance: textfield; /* Remove o spinner no Firefox */
     }
+
+    input:disabled {
+        background-color:rgb(218, 218, 218);
+        color: #999;
+        border: 1px solid #ccc;
+        cursor: not-allowed;
+    }
 `
 
 export { Container };
