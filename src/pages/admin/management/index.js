@@ -43,9 +43,11 @@ export default function UserManagementScreen() {
   const handleToggleStatus = (userId, currentStatus) => {
       const newStatus = currentStatus === 'ATIVADO' ? 'DESATIVADO' : 'ATIVADO';
       
-      // TEMPORARIO
-      console.log(`Alterar status do usuário ${userId} para: ${newStatus}`);
+      const confirmChange = window.confirm('Tem certeza que deseja alterar o status do usuaário ${userId} para ${newStatus}?');
       
+      if(!confirmChange){
+        return;
+      }
       setUsers(
         users.map((user) =>
           user.id === userId ? { ...user, status: newStatus } : user
