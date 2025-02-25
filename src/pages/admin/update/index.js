@@ -9,8 +9,8 @@ import Input from "../../../components/input";
 
 import { Container } from "./styled";
 
-import AdminApi from "../../../service/admin/userAdmin";
-const api = new AdminApi();
+import userAdminApi from "../../../service/admin/userAdmin";
+const api = new userAdminApi();
 
 export default function Update() {
     const [id, setId] = useState(0);

@@ -1,6 +1,6 @@
 import ServiceBase from '../serviceBase.js';
 
-export default class AuthApi extends ServiceBase {
+export default class userAdminApi extends ServiceBase {
     constructor() {
         super('/user/admin');
     }
