@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as S from './styled'; // Importa os estilos do arquivo styled.js
+import * as S from './styled'; 
 import Button  from "../../../components/button";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -40,18 +40,34 @@ export default function UserManagementScreen() {
       navigation("/admin/update", { state: user });
   };
 
-  const handleToggleStatus = (userId, currentStatus) => {
+  const handleToggleStatus = async (userId, currentStatus) => {
       const newStatus = currentStatus === 'ATIVADO' ? 'DESATIVADO' : 'ATIVADO';
       
-      // TEMPORARIO
-      console.log(`Alterar status do usuário ${userId} para: ${newStatus}`);
+      const confirmChange = window.confirm(`Tem certeza que deseja alterar o status do usuário ${userId} para ${newStatus}?`);
       
+      if(!confirmChange){
+        return;
+      }
+
+      const response = await api.handleStatus(userId);
+      if (response.status !== 204) {
+        toast.error(response.error);
+        console.log(response.message);
+        return;
+      }
+
       setUsers(
         users.map((user) =>
           user.id === userId ? { ...user, status: newStatus } : user
         )
       );
+
+      toast.success(`Usuário ${newStatus} com sucesso`);
   };
+
+  const comeBack = () => {
+    navigation("/admin/menu");
+  }
 
   useEffect(() => {
     listAllUsers();
@@ -59,6 +75,15 @@ export default function UserManagementScreen() {
 
   return (
     <S.Container>
+      <Button
+        myHeight={6}
+        myWidth={8}
+        myBackgroundColor={"#007bff"}
+        myColor={"white"}
+        myMethod={comeBack}
+      >
+        Voltar
+      </Button>
       <S.Title> Lista de Usuários </S.Title>
 
       <div className="group-actions">
@@ -93,6 +118,7 @@ export default function UserManagementScreen() {
       <S.Table>
         <thead>
           <S.TableRow>
+          <S.TableHeader>Id</S.TableHeader>
             <S.TableHeader>Nome</S.TableHeader>
             <S.TableHeader>Email</S.TableHeader>
             <S.TableHeader>Status</S.TableHeader>
@@ -102,6 +128,7 @@ export default function UserManagementScreen() {
         <tbody>
           {filteredUsers.map((user) => (
             <S.TableRow key={user.id}>
+              <S.TableCell>{user.id}</S.TableCell>
               <S.TableCell>{user.name}</S.TableCell>
               <S.TableCell>{user.email}</S.TableCell>
               <S.TableCell>{user.status}</S.TableCell>

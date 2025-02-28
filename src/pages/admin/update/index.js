@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthBox from "../../../components/auth-box";
 import Button from "../../../components/button";
 import Input from "../../../components/input";
+import Cookies from 'js-cookie';
 
 import { Container } from "./styled";
 
@@ -20,10 +21,12 @@ export default function Update() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userGroup, setUserGroup] = useState("");
-    
+    const [status, setStatus] = useState("");
+
     const location = useLocation();
     const navigation = useNavigate();
 
+    const user = api.getUser();
     const options = ["ADMIN", "ESTOQUISTA"];
 
     const isFormCompleted = Object.values(
@@ -51,19 +54,24 @@ export default function Update() {
             return;
         }
         
-        let response = await api.update(1, {
+        let response = await api.update(user.id, {
             id,
             name,
             cpf,
             email,
             password,
-            userGroup  
+            userGroup,
+            status
         })
 
         if (response.status !== 204) {
-            toast.warn(response.error);
+            toast.error(response.error);
             console.log(response.message);
             return;
+        }
+
+        if (user.id === response.data.id) {
+            Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });   
         }
 
         toast.success("Usuário alterado com sucesso!");
@@ -82,6 +90,7 @@ export default function Update() {
         setEmail(location.state[0].email);
         setCpf(location.state[0].cpf);
         setUserGroup(location.state[0].userGroup);
+        setStatus(location.state[0].status);
     }
 
     useEffect(() => {
