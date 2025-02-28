@@ -10,8 +10,8 @@ import Input from "../../../components/input";
 
 import { Container } from "./styled";
 
-// import AuthApi from "../../../service/authApi";
-// const api = new AuthApi();
+import userAdminApi from "../../../service/admin/userAdmin.js";
+const api = new userAdminApi();
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -50,8 +50,17 @@ export default function Register() {
             return;
         }
 
+        let response = await api.register({ name, cpf, email, password, "userGroup": group, "status": "ATIVADO" });
+        
+        if(response.status !== 200){
+            toast.warn(response.error);
+            console.log(response.message);
+            return;
+        }
+
         toast.success("Registro inserido com sucesso!");
         navigation("/admin/management");
+
     }
 
     return (

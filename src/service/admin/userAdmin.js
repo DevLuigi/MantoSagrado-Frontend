@@ -1,6 +1,6 @@
 import ServiceBase from '../serviceBase.js';
 
-export default class AuthApi extends ServiceBase {
+export default class userAdminApi extends ServiceBase {
     constructor() {
         super('/user/admin');
     }
@@ -14,7 +14,9 @@ export default class AuthApi extends ServiceBase {
     }
 
     async register(body) {
-        return await super.post('', body);
+        let response = await super.post('', body)
+        return response;
+        // return await super.post('', body);
     }
 
     async update(id, body) {
