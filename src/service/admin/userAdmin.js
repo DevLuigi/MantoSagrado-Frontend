@@ -22,4 +22,8 @@ export default class userAdminApi extends ServiceBase {
     async update(id, body) {
         return await super.put(`/${id}`, body); 
     }
+
+    async handleStatus(id) {
+        return await super.put(`/${id}/status`);
+    }
 }

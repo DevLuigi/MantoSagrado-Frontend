@@ -33,9 +33,9 @@ export default function Login() {
         };
 
         Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });  
-        toast.success("Login efetuado com sucesso");
-        
-        // Colocar rota correta posteriormente
+
+        toast.success("Login efetuado com sucesso");    
+
         navigation("/admin/menu");
     }
 

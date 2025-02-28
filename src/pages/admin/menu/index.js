@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { Button, Container, Title } from "./styled";
 import { toast } from "react-toastify";
 
+import AdminApi from "../../../service/admin/userAdmin";
+const api = new AdminApi();
+
 export default function Menu() {
     const navigation = useNavigate();
 
@@ -10,6 +13,13 @@ export default function Menu() {
     };
     
     const handleListarUsuarios = () => {
+        const user = api.getUser();
+    
+        if (user.userGroup !== "ADMIN") {
+          toast.warn("Essa pagina é exclusivamente para administradores");
+          return;
+        }
+
         navigation("/admin/management");
     };
     

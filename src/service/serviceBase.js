@@ -23,7 +23,6 @@ export default class ServiceBase {
         let logged = Cookies.get('user-logged');
         if (logged) {
             let cookie = JSON.parse(logged);
-            delete cookie.token;
             return cookie;
         } else {
             return {};
