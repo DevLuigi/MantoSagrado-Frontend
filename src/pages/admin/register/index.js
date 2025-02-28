@@ -50,7 +50,8 @@ export default function Register() {
             return;
         }
 
-        let response = api.register({ name, cpf, email, password, group, "status": "ATIVADO" });
+        let response = await api.register({ name, cpf, email, password, "userGroup": group, "status": "ATIVADO" });
+        
         if(response.status !== 200){
             toast.warn(response.error);
             console.log(response.message);

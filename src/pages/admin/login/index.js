@@ -10,8 +10,8 @@ import Input   from "../../../components/input";
 
 import {Container}  from "./styled";
 
-// import AuthApi from "../../../service/authApi";
-// const api = new AuthApi();
+import userAdminApi from "../../../service/admin/userAdmin";
+const api = new userAdminApi();
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -24,22 +24,16 @@ export default function Login() {
             toast.warn("Preencha o e-mail e senha antes de entrar");
             return;
         }
-
-        // Fazer conexão com API
-        // const response = await api.login({email, password});
         
-        const response = {
-            status: 200,
-            data: 'cookie'
-        }
+        const response = await api.login({email, password});
         
         if(response.status === 404) {
-            toast.warn("Crendenciais inválidas");
+            toast.error("Crendenciais inválidas");
             return;
         };
 
         Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });  
-        toast.success("Login efetuado com sucesso");    
+        toast.success("Login efetuado com sucesso");
         
         // Colocar rota correta posteriormente
         navigation("/admin/menu");
@@ -69,6 +63,7 @@ export default function Login() {
                         myMargin={"1.5em 0em"} 
                         myHeight={9} 
                         myWidth={28}
+                        myType={"password"}
                     > 
                         Sua senha 
                     </Input>

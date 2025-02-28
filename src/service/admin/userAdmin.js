@@ -14,7 +14,9 @@ export default class userAdminApi extends ServiceBase {
     }
 
     async register(body) {
-        return await super.post('', body);
+        let response = await super.post('', body)
+        return response;
+        // return await super.post('', body);
     }
 
     async update(id, body) {
