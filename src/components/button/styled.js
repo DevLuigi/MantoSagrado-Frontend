@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { darken, lighten } from "polished";
 
 const Container = styled.button`
-    display: flex;
+    display: ${(props) => `${props?.style?.myDoNotDisplay ? 'none' : 'flex'}`};
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;

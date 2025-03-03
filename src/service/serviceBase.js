@@ -84,6 +84,13 @@ export default class ServiceBase {
                 message: e.message,
                 status: e.status
             }
+        } else if (e.response?.data) {
+            return {
+                error: e.response.data,
+                errorName: e.response.data,
+                message: e.message,
+                status: e.status
+            }
         } else {
             return {
                 error: 'Ocorreu um erro. Já estamos tentando resolver!',
