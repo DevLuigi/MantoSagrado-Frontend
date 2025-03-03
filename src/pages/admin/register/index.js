@@ -136,6 +136,9 @@ export default function Register() {
                             value={group}
                             onChange={(e) => setGroup(e.target.value)}
                         >
+                            <option key={1} value={""}>
+                                SELECIONE...
+                            </option>
                             {options.map((option, index) => (
                                 <option key={index} value={option}>
                                     {option}

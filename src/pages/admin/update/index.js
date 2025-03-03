@@ -171,6 +171,9 @@ export default function Update() {
                             value={userGroup}
                             onChange={(e) => setUserGroup(e.target.value)}
                         >
+                            <option key={1} value={""}>
+                                    SELECIONE...
+                            </option>
                             {options.map((option, index) => (
                                 <option key={index} value={option}>
                                     {option}

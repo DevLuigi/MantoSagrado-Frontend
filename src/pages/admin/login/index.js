@@ -32,10 +32,14 @@ export default function Login() {
             return;
         };
 
+        if(response.status !== 200) {
+            toast.error(response.error);
+            console.log(response.message);
+            return;
+        }
+
         Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });  
-
         toast.success("Login efetuado com sucesso");    
-
         navigation("/admin/menu");
     }
 
