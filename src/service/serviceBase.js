@@ -56,6 +56,15 @@ export default class ServiceBase {
         }
     }
 
+    async patch(path) {
+        try {
+            let r = await this.api.patch(path);
+            return this.handleResponse(r);
+        } catch (e) {
+            return this.handleError(e);
+        }
+    }
+
     async delete(path) {
         try {
             let r = await this.api.delete(path);
