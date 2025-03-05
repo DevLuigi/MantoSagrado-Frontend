@@ -3,13 +3,20 @@ import * as S from './styled';
 import Button  from "../../../components/button";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 import ProductApi from "../../../service/product/product";
+import userAdminApi from '../../../service/admin/userAdmin';
+
+const apiUser = new userAdminApi();
 const api = new ProductApi();
 
 export default function ProductManagementScreen() {
   const [products, setProducts] = useState([]); 
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [doNotDisplayStatus, setDoNotDisplayStatus] = useState(false);
+  const [doNotDisplayViewProduct, setDoNotDisplayViewProduct] = useState(false);
 
   const navigation = useNavigate();
 
@@ -39,6 +46,7 @@ export default function ProductManagementScreen() {
 
   const handleEdit = (productId) => {
       const product = products.filter(product => product.id === productId);
+      Cookies.set("selected-product", JSON.stringify(product), { expires: 1 });
       navigation("/admin/product/update", { state: product });
   };
 
@@ -73,12 +81,30 @@ export default function ProductManagementScreen() {
       toast.success(`Produto ${newStatus} com sucesso`);
   };
 
+  const verifyGroup = () => {
+    switch (apiUser.getUser().userGroup) {
+      case "ADMIN":
+        setDoNotDisplayStatus(false);
+        setDoNotDisplayViewProduct(false);
+        break;
+
+      case "ESTOQUISTA":
+        setDoNotDisplayStatus(true);
+        setDoNotDisplayViewProduct(true);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   const comeBack = () => {
     navigation("/admin/menu");
   }
 
   useEffect(() => {
     listAllProducts();
+    verifyGroup();
   }, [])
 
   return (
@@ -153,12 +179,15 @@ export default function ProductManagementScreen() {
                   Alterar
                 </S.ActionButton>
                 <S.ActionButton
+                  disabled={doNotDisplayStatus}
                   onClick={() => handleToggleStatus(product.id, product.status)}
                 >
                   {product.status === 'ATIVADO' ? 'Desativar' : 'Ativar'}
                 </S.ActionButton>
-                <S.ActionButton onClick={() => viewProductDetails(product.id)}>
-                  Visualizar
+                <S.ActionButton 
+                  disabled={doNotDisplayViewProduct}
+                  onClick={() => viewProductDetails(product.id)}>
+                    Visualizar
                 </S.ActionButton>
               </S.TableCell>
             </S.TableRow>

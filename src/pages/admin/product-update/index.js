@@ -10,7 +10,10 @@ import Cookies from 'js-cookie';
 
 import { Container } from "./styled";
 
+import userAdminApi from "../../../service/admin/userAdmin";
 import ProductApi from "../../../service/product/product";
+
+const apiUser = new userAdminApi();
 const api = new ProductApi();
 
 export default function ProductUpdate() {
@@ -23,11 +26,14 @@ export default function ProductUpdate() {
     const [description, setDescription] = useState("");
     const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState("");
+    const [status, setStatus] = useState("");
+
+    const [disableFields, setDisableFields] = useState(false);
 
     const location = useLocation();
     const navigation = useNavigate();
 
-    const product = api.get();
+    const product = api.getProduct();
     const options = ["HOME", "AWAY", "THIRD", "GOALKEEPER", "SPECIAL"];
 
     const isFormCompleted = Object.values(
@@ -42,7 +48,7 @@ export default function ProductUpdate() {
             return;
         }
         
-        let response = await api.update(product.id, { //ajustar metodo para pegar o id corretamente
+        let response = await api.update(id, {
             id,
             name,
             teamName,
@@ -51,7 +57,8 @@ export default function ProductUpdate() {
             brand,
             description,
             quantity,
-            price
+            price,
+            status
         })
 
         if (response.status !== 204) {
@@ -61,7 +68,8 @@ export default function ProductUpdate() {
         }
 
         if (product.id === response.data.id) {
-            Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });   
+            Cookies.set("selected-product", JSON.stringify(product), { expires: 1 });
+
         }
 
         toast.success("Produto alterado com sucesso!");
@@ -84,10 +92,27 @@ export default function ProductUpdate() {
         setDescription(location.state[0].description);
         setQuantity(location.state[0].quantity);
         setPrice(location.state[0].price);
+        setStatus(location.state[0].status);
     }
+
+    const verifyGroup = () => {
+        switch (apiUser.getUser().userGroup) {
+            case "ADMIN":
+                setDisableFields(false);
+                break;
+            
+            case "ESTOQUISTA":
+                setDisableFields(true);
+                break;
+    
+            default:
+                break;
+        }
+    };
 
     useEffect(() => {
         handleUserInformation();
+        verifyGroup();
     }, [])
 
     return (
@@ -95,8 +120,8 @@ export default function ProductUpdate() {
             <Link to={"/"}>
                 <img src="/assets/images/icon_logo.png" alt="logo-image" />
             </Link>
-            <AuthBox myWidth={40} myHeight={70}>
-                <h3> Registre um novo produto </h3>
+            <AuthBox myWidth={40} myHeight={95}>
+                <h3> Atualize o produto selecionado </h3>
                 <hr />
                 <div>
                     <Input
@@ -106,6 +131,7 @@ export default function ProductUpdate() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="Camisa"
+                        myDisabled={disableFields}
                     >
                         Nome
                     </Input>
@@ -117,6 +143,7 @@ export default function ProductUpdate() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="Real Madrid"
+                        myDisabled={disableFields}
                     >
                         Nome do time
                     </Input>
@@ -128,6 +155,7 @@ export default function ProductUpdate() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="2025"
+                        myDisabled={disableFields}
                     >
                         Temporada
                     </Input>
@@ -139,6 +167,7 @@ export default function ProductUpdate() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="ADIDAS"
+                        myDisabled={disableFields}
                     >
                         Marca
                     </Input>
@@ -150,6 +179,7 @@ export default function ProductUpdate() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="Camisa Real Madrid 24/25, modelo AWAY"
+                        myDisabled={disableFields}
                     >
                         Descrição
                     </Input>
@@ -174,6 +204,7 @@ export default function ProductUpdate() {
                         myWidth={28}
                         myType="number"
                         myPlaceHolder="299.99"
+                        myDisabled={disableFields}
                     >
                         Preço
                     </Input>
@@ -184,6 +215,7 @@ export default function ProductUpdate() {
                             id="select"
                             value={kitType}
                             onChange={(e) => setKitType(e.target.value)}
+                            disabled={disableFields}
                         >
                             <option key={1} value={""}>
                                 SELECIONE...

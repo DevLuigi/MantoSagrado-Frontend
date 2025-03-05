@@ -29,6 +29,15 @@ export default class ServiceBase {
         }
     }
 
+    getProduct() {
+        let storedProduct = Cookies.get('selected-product');
+        if (storedProduct) {
+            return JSON.parse(storedProduct);
+        } else {
+            return {};
+        }
+    }    
+
     async get(path) {
         try {
             let r = await this.api.get(path);
