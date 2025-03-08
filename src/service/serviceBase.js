@@ -29,6 +29,15 @@ export default class ServiceBase {
         }
     }
 
+    getProduct() {
+        let storedProduct = Cookies.get('selected-product');
+        if (storedProduct) {
+            return JSON.parse(storedProduct);
+        } else {
+            return {};
+        }
+    }    
+
     async get(path) {
         try {
             let r = await this.api.get(path);
@@ -50,6 +59,15 @@ export default class ServiceBase {
     async put(path, body) {
         try {
             let r = await this.api.put(path, body);
+            return this.handleResponse(r);
+        } catch (e) {
+            return this.handleError(e);
+        }
+    }
+
+    async patch(path) {
+        try {
+            let r = await this.api.patch(path);
             return this.handleResponse(r);
         } catch (e) {
             return this.handleError(e);

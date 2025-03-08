@@ -16,7 +16,7 @@ export default function Menu() {
     const navigation = useNavigate();
 
     const redirectToProducts = () => {
-        toast.warn("Em desenvolvimento...");
+      navigation("/admin/product");
     };
     
     const redirectToUsers = () => {
