@@ -17,6 +17,7 @@ export default function ProductManagementScreen() {
 
   const [doNotDisplayStatus, setDoNotDisplayStatus] = useState(false);
   const [doNotDisplayViewProduct, setDoNotDisplayViewProduct] = useState(false);
+  const [doNotDisplayButton, setDoNotDisplayButton] = useState(false);
 
   const navigation = useNavigate();
 
@@ -41,6 +42,11 @@ export default function ProductManagementScreen() {
   }
 
   const handleRegister = () => {
+      if (apiUser.getUser().userGroup == "ESTOQUISTA") {
+        toast.warning("Apenas um admin pode inserir um produto!")
+        return;
+      }
+
       navigation("/admin/product/register");
   }
 
@@ -86,11 +92,13 @@ export default function ProductManagementScreen() {
       case "ADMIN":
         setDoNotDisplayStatus(false);
         setDoNotDisplayViewProduct(false);
+        setDoNotDisplayButton(false);
         break;
 
       case "ESTOQUISTA":
         setDoNotDisplayStatus(true);
         setDoNotDisplayViewProduct(true);
+        setDoNotDisplayButton(true);
         break;
 
       default:
