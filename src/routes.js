@@ -1,27 +1,32 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LoginAdmin from './pages/admin/login';
-import RegisterAdmin from './pages/admin/register';
-import UpdateAdmin from './pages/admin/update';
 import MenuAdmin from './pages/admin/menu';
-import ManagementAdmin from "./pages/admin/management";
-import ProductManagementScreen from "./pages/admin/product";
-import ProductRegister from "./pages/admin/product-register";
-import ProductUpdate from "./pages/admin/product-update";
+
+import UserRegisterAdmin from './pages/admin/user/register';
+import UserUpdateAdmin from './pages/admin/user/update';
+import UserManagementAdmin from "./pages/admin/user/management";
+
+import ProductManagementAdmin from "./pages/admin/product/management";
+import ProductRegisterAdmin from "./pages/admin/product/register";
+import ProductUpdateAdmin from "./pages/admin/product/update";
 
 export default function RoutesProject() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/admin/login" element={<LoginAdmin />}/>
-                <Route path="/admin/register" element={<RegisterAdmin />}/>
-                <Route path="/admin/update" element={<UpdateAdmin />}/>
                 <Route path="/admin/menu" element={<MenuAdmin />}/>
-                <Route path="/admin/management" element={<ManagementAdmin />}/>
 
-                <Route path="/admin/product" element={<ProductManagementScreen />}/>
-                <Route path="/admin/product/register" element={<ProductRegister />}/>
-                <Route path="/admin/product/update" element={<ProductUpdate />}/>
+                {/* User */}
+                <Route path="/admin/user/management" element={<UserManagementAdmin />}/>
+                <Route path="/admin/user/register" element={<UserRegisterAdmin />}/>
+                <Route path="/admin/user/update" element={<UserUpdateAdmin />}/>
+                
+                {/* Product */}
+                <Route path="/admin/product/management" element={<ProductManagementAdmin />}/>
+                <Route path="/admin/product/register" element={<ProductRegisterAdmin />}/>
+                <Route path="/admin/product/update" element={<ProductUpdateAdmin />}/>
             </Routes>
         </BrowserRouter>
     )

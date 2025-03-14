@@ -56,6 +56,17 @@ export default class ServiceBase {
         }
     }
 
+    async postImage(path, body) {
+        try {
+            let r = await this.api.post(path, body, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            return this.handleResponse(r);
+        } catch (e) {
+            return this.handleError(e);
+        }
+    }
+
     async put(path, body) {
         try {
             let r = await this.api.put(path, body);
@@ -68,6 +79,17 @@ export default class ServiceBase {
     async patch(path) {
         try {
             let r = await this.api.patch(path);
+            return this.handleResponse(r);
+        } catch (e) {
+            return this.handleError(e);
+        }
+    }
+
+    async patchImage(path) {
+        try {
+            let r = await this.api.patch(path, {}, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
             return this.handleResponse(r);
         } catch (e) {
             return this.handleError(e);

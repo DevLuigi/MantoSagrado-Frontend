@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import AuthBox from "../../../components/auth-box";
-import Button from "../../../components/button";
-import Input from "../../../components/input";
+import AuthBox from "../../../../components/auth-box";
+import Button from "../../../../components/button";
+import Input from "../../../../components/input";
 import Cookies from 'js-cookie';
 
 import { Container } from "./styled";
 
-import userAdminApi from "../../../service/admin/userAdmin";
+import userAdminApi from "../../../../service/admin/userAdmin";
 const api = new userAdminApi();
 
 export default function Update() {
@@ -75,13 +75,13 @@ export default function Update() {
         }
 
         toast.success("Usuário alterado com sucesso!");
-        navigation("/admin/management");
+        navigation("/admin/user/management");
     }
 
     const handleUserInformation = () => {
         if (!location.state) {
             toast.warn("Selecione um usuário antes de alterar!");
-            navigation("/admin/management");
+            navigation("/admin/user/management");
             return;
         }
 
@@ -91,6 +91,10 @@ export default function Update() {
         setCpf(location.state[0].cpf);
         setUserGroup(location.state[0].userGroup);
         setStatus(location.state[0].status);
+    }
+
+    const comeBack = () => {
+        navigation("/admin/user/management");
     }
 
     useEffect(() => {
@@ -182,16 +186,28 @@ export default function Update() {
                         </select>
                     </div>
 
-                    <Button
-                        myMargin={"1.5em 0em"}
-                        myHeight={5}
-                        myWidth={28.6}
-                        myBackgroundColor={"#007bff"}
-                        myMethod={update}
-                        myColor={"#ffff"}
-                    >
-                        Alterar
-                    </Button>
+                    <div className="button-group">
+                        <Button
+                            myMargin={"1.5em 1em 1.5em 0em"}
+                            myHeight={5}
+                            myWidth={14}
+                            myBackgroundColor={"#007bff"}
+                            myMethod={update}
+                            myColor={"#ffff"}
+                        >
+                            Alterar
+                        </Button>
+                        <Button
+                            myMargin={"1.5em 0em"}
+                            myHeight={5}
+                            myWidth={14}
+                            myBackgroundColor={"#007bff"}
+                            myMethod={comeBack}
+                            myColor={"#ffff"}
+                        >
+                            Cancelar
+                        </Button>
+                    </div>
                 </div>
             </AuthBox>
         </Container>

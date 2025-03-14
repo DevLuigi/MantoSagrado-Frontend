@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import * as S from './styled'; 
-import Button  from "../../../components/button";
+import Button  from "../../../../components/button";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Cookies from 'js-cookie';
 
-import ProductApi from "../../../service/product/product";
-import userAdminApi from '../../../service/admin/userAdmin';
+import ProductApi from "../../../../service/admin/productAdmin.js";
+import userAdminApi from '../../../../service/admin/userAdmin.js';
 
 const apiUser = new userAdminApi();
 const api = new ProductApi();
@@ -42,7 +42,7 @@ export default function ProductManagementScreen() {
   }
 
   const handleRegister = () => {
-      if (apiUser.getUser().userGroup == "ESTOQUISTA") {
+      if (apiUser.getUser().userGroup === "ESTOQUISTA") {
         toast.warning("Apenas um admin pode inserir um produto!")
         return;
       }
@@ -167,6 +167,7 @@ export default function ProductManagementScreen() {
             <S.TableHeader>Marca</S.TableHeader>
             <S.TableHeader>Estoque</S.TableHeader>
             <S.TableHeader>Preço</S.TableHeader>
+            <S.TableHeader>Avaliação</S.TableHeader>
             <S.TableHeader>Status</S.TableHeader>
             <S.TableHeader>Ações</S.TableHeader>
           </S.TableRow>
@@ -181,6 +182,7 @@ export default function ProductManagementScreen() {
               <S.TableCell>{product.brand}</S.TableCell>
               <S.TableCell>{product.quantity}</S.TableCell>
               <S.TableCell>{product.price}</S.TableCell>
+              <S.TableCell>{product.evaluation}</S.TableCell>
               <S.TableCell>{product.status}</S.TableCell>
               <S.TableCell>
                 <S.ActionButton onClick={() => handleEdit(product.id)}>

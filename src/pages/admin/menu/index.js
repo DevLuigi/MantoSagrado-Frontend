@@ -16,11 +16,11 @@ export default function Menu() {
     const navigation = useNavigate();
 
     const redirectToProducts = () => {
-      navigation("/admin/product");
+      navigation("/admin/product/management");
     };
     
     const redirectToUsers = () => {
-        navigation("/admin/management");
+        navigation("/admin/user/management");
     };
     
     const redirectToSales = () => {
