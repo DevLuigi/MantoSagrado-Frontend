@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as S from './styled'; 
-import Button  from "../../../components/button";
+import Button  from "../../../../components/button";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 
-import AdminApi from "../../../service/admin/userAdmin";
+import AdminApi from "../../../../service/admin/userAdmin";
 const api = new AdminApi();
 
 export default function UserManagementScreen() {
@@ -32,12 +32,12 @@ export default function UserManagementScreen() {
   }
 
   const handleRegister = () => {
-      navigation("/admin/register");
+      navigation("/admin/user/register");
   }
 
   const handleEdit = (userId) => {
       const user = users.filter(user => user.id === userId);
-      navigation("/admin/update", { state: user });
+      navigation("/admin/user/update", { state: user });
   };
 
   const handleToggleStatus = async (userId, currentStatus) => {

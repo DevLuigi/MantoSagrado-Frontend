@@ -21,6 +21,14 @@ const Container = styled.div`
         width: 4em;
     }
 
+    .button-group {
+        display: flex;
+        flex-direction: row;
+    }
+
+    label {
+        margin: 0em .5em 0em 0em;
+    }
 `
 
 export { Container }

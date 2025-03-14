@@ -1,16 +1,15 @@
-import { use, useState } from "react";
+import { useState } from "react";
 
-import Cookies from 'js-cookie';
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 
-import AuthBox from "../../../components/auth-box";
-import Button from "../../../components/button";
-import Input from "../../../components/input";
+import AuthBox from "../../../../components/auth-box/index.js";
+import Button from "../../../../components/button/index.js";
+import Input from "../../../../components/input/index.js";
 
-import { Container } from "./styled";
+import { Container } from "./styled.js";
 
-import userAdminApi from "../../../service/admin/userAdmin.js";
+import userAdminApi from "../../../../service/admin/userAdmin.js";
 const api = new userAdminApi();
 
 export default function Register() {
@@ -40,7 +39,7 @@ export default function Register() {
             return;
         }
 
-        if (password != confirmPassword) {
+        if (password !== confirmPassword) {
             toast.warn("As senhas não são iguais !")
             return;
         }
@@ -59,8 +58,12 @@ export default function Register() {
         }
 
         toast.success("Registro inserido com sucesso!");
-        navigation("/admin/management");
+        navigation("/admin/user/management");
 
+    }
+
+    const comeBack = () => {
+        navigation("/admin/user/management");
     }
 
     return (
@@ -69,7 +72,7 @@ export default function Register() {
                 <img src="/assets/images/icon_logo.png" alt="logo-image" />
             </Link>
             <AuthBox myWidth={40} myHeight={70}>
-                <h3> Acesse sua conta </h3>
+                <h3> Cadastrando um novo usuário </h3>
                 <hr />
                 <div>
                     <Input
@@ -146,17 +149,29 @@ export default function Register() {
                             ))}
                         </select>
                     </div>
-
-                    <Button
-                        myMargin={"1.5em 0em"}
-                        myHeight={5}
-                        myWidth={28.6}
-                        myBackgroundColor={"#007bff"}
-                        myMethod={register}
-                        myColor={"#ffff"}
-                    >
-                        Entrar
-                    </Button>
+                    
+                    <div className="button-group">
+                        <Button
+                            myMargin={"1.5em 1em 1.5em 0em"}
+                            myHeight={5}
+                            myWidth={14}
+                            myBackgroundColor={"#007bff"}
+                            myMethod={register}
+                            myColor={"#ffff"}
+                        >
+                            Cadastrar
+                        </Button>
+                        <Button
+                            myMargin={"1.5em 0em"}
+                            myHeight={5}
+                            myWidth={14}
+                            myBackgroundColor={"#007bff"}
+                            myMethod={comeBack}
+                            myColor={"#ffff"}
+                        >
+                            Cancelar
+                        </Button>
+                    </div>
                 </div>
             </AuthBox>
         </Container>
