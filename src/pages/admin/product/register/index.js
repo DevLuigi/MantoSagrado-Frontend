@@ -18,6 +18,11 @@ import ProductApi from "../../../../service/admin/productAdmin.js";
 const api = new ProductApi();
 
 export default function ProductRegister() {
+    const defaultImage = {
+        default: true,
+        previewUrl: '/assets/images/icon_logo.png'
+    }
+
     const [name, setName] = useState("");
     const [teamName, setTeamName] = useState("");
     const [season, setSeason] = useState("");
@@ -28,10 +33,7 @@ export default function ProductRegister() {
     const [price, setPrice] = useState("");
     const [evaluation, setEvaluation] = useState(0);
     const [images, setImages] = useState([]);
-    const [previews, setPreviews] = useState([{
-        default: true,
-        previewUrl: '/assets/images/icon_logo.png'
-    }]);
+    const [previews, setPreviews] = useState([defaultImage]);
 
     const kitTypeOptions = ["HOME", "AWAY", "THIRD", "GOALKEEPER", "SPECIAL"];
     const evaluationOptions = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
@@ -78,12 +80,20 @@ export default function ProductRegister() {
     }
 
     const handleFileChange = (event) => {
+        if (!event) {
+            return;
+        }
+        
+        if (event.target.files[0]?.type !== "image/jpeg") {
+            toast.warn("Tipo de imagem inválido, selecione uma image no formato .jpeg");
+            return;
+        }
+
         if (previews[0]?.default === true ) {
             setPreviews([]);    
         }
         
-        const files = Array.from(event.target.files); // Converter FileList em array
-
+        const files = Array.from(event?.target?.files); // Converter FileList em array
         const newPreviews = files.map((file) => ({
             file,
             previewUrl: URL.createObjectURL(file),
@@ -125,18 +135,11 @@ export default function ProductRegister() {
             return;    
         }
 
-        const updatedPreviews = [...previews];
-        updatedPreviews.splice(index, 1);
+        const updatedPreviews = previews.filter((_, i) => i !== index);
+        const newDefaultImage = [{ ...defaultImage }];
 
-        setImages(updatedPreviews);
-        setPreviews(updatedPreviews);
-
-        if (updatedPreviews.length <= 0) {
-            setPreviews({
-                default: true,
-                previewUrl: '/assets/images/icon_logo.png'
-            })
-        }
+        setPreviews(updatedPreviews.length <= 0 ? newDefaultImage : updatedPreviews);
+        setImages(updatedPreviews.length <= 0 ? newDefaultImage : updatedPreviews);
     }
 
     const comeBack = () => {
@@ -329,8 +332,8 @@ export default function ProductRegister() {
                         )}
 
                         <div className="group-input-file">
-                            <label className="input-file" htmlFor="input-file">Selecionar imagem</label>
-                            <input id="input-file" type="file" accept="image/*" multiple onChange={handleFileChange} />
+                            <label className="input-file" htmlFor="input-file">Adicionar imagem</label>
+                            <input id="input-file" type="file" accept="image/jpeg" multiple onChange={handleFileChange} />
                         </div>
                     </div>
                 </div>

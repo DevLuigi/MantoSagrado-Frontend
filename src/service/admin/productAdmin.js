@@ -21,11 +21,15 @@ export default class ProductApi extends ServiceBase {
         return await super.patch(`/${id}/status`);
     }
 
-    async listAllImages(productId) {
+    async listAllImagesByProduct(productId) {
         return await super.get(`/${productId}/image`);
     }
 
     async uploadImage(id, isMain, file) {
         return await super.postImage(`/${id}/image/isMain/${isMain}`, file);
+    }
+
+    async deleteAllImagesByProduct(productId) {
+        return await super.delete(`/${productId}/image`);
     }
 }
