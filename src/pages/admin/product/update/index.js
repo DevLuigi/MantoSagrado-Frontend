@@ -16,11 +16,17 @@ import { Container } from "./styled";
 
 import userAdminApi from "../../../../service/admin/userAdmin.js";
 import ProductApi from "../../../../service/admin/productAdmin.js";
+import { newFile } from "../../../../service/utils/fileUtils.js";
 
 const apiUser = new userAdminApi();
 const api = new ProductApi();
 
 export default function ProductUpdate() {
+    const defaultImage = {
+        default: true,
+        previewUrl: '/assets/images/icon_logo.png'
+    }
+
     const [id, setId] = useState(0);
     const [name, setName] = useState("");
     const [teamName, setTeamName] = useState("");
@@ -43,21 +49,21 @@ export default function ProductUpdate() {
     const options = ["HOME", "AWAY", "THIRD", "GOALKEEPER", "SPECIAL"];
     const evaluationOptions = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
-    const isFormCompleted = Object.values(
-        [name, teamName, season, kitType, brand, description]
-    ).every((value) => value.trim() !== "");
-
-    const isPriceValid = price.toString().trim() !== "" && !isNaN(price) && Number(price) > 0;
+    const isFormCompleted = 
+        Object.values(
+            [name, teamName, season, kitType, brand, description]
+        ).every((value) => value.trim() !== "");
+    
+    const isPriceValid = price.toString().trim() !== "" && !isNaN(price) && Number(price) > 0
     const isEvaluationValid = evaluation.toString().trim() !== "" && !isNaN(evaluation) && Number(evaluation) > 0 && Number(evaluation) < 6;
     const isMainNotSelected = images.every(img => img.isMain === false);
 
     const update = async () => {
-        // isMainNotSelected
-        if (!isFormCompleted || !isPriceValid || !isEvaluationValid) {
+        if (!isFormCompleted || !isPriceValid || !isEvaluationValid || isMainNotSelected) {
             toast.warn("Preencha todos os campos !");
             return;
         }
-        
+
         let response = await api.update(id, {
             id,
             name,
@@ -72,17 +78,71 @@ export default function ProductUpdate() {
             evaluation
         });
 
-        if (response.status !== 204) {
+        if (response.status !== 200) {
             toast.error(response.error);
             console.log(response.message);
             return;
         }
 
+        if(await handleImageUpload(response.data.id)) return;
+
         toast.success("Produto alterado com sucesso!");
         navigation("/admin/product/management");
     }
-     // if(await handleImageUpload(response.data.id)) return;
 
+    const handleImageUpload = async (productId) => {
+        if (!productId) {
+            toast.warn("Id de produto não encontrado!");
+            return;
+        }
+        
+        let response;
+        response = await api.deleteAllImagesByProduct(productId);
+        if(response.status !== 204){
+            toast.warn(response.error);
+            console.log(response.message);
+            return true;
+        }
+
+        images.forEach(async (img) => {
+            const formData = new FormData();
+            formData.append("file", img.file);
+            response = await api.uploadImage(productId, img.isMain, formData);  
+            
+            if(response.status !== 200){
+                toast.warn(response.error);
+                console.log(response.message);
+                return true;
+            }
+        });
+
+        return false;
+    };
+
+    const handleFileChange = (event) => {
+        if (!event) {
+            return;
+        }
+        
+        if (event.target.files[0]?.type !== "image/jpeg") {
+            toast.warn("Tipo de imagem inválido, selecione uma image no formato .jpeg");
+            return;
+        }
+
+        if (previews[0]?.default === true ) {
+            setPreviews([]);    
+        }
+
+        const files = Array.from(event.target.files); // Converter FileList em array
+        const newPreviews = files.map((file) => ({
+            file,
+            previewUrl: URL.createObjectURL(file),
+            isMain: false
+        }));
+
+        setImages((prevImages) => [...prevImages, ...newPreviews]);
+        setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+    };
 
     const handleUserInformation = async () => {
         if (!location.state) {
@@ -103,7 +163,7 @@ export default function ProductUpdate() {
         setEvaluation(location.state[0].evaluation);
         setStatus(location.state[0].status);
 
-        let response = await api.listAllImages(location.state[0].id);
+        let response = await api.listAllImagesByProduct(location.state[0].id);
         if (response.status !== 200) {
             toast.error(response.error);
             console.log(response.message);
@@ -111,12 +171,43 @@ export default function ProductUpdate() {
         }
 
         setPreviews(response?.data.map((img, index) => {
+            const file = newFile(img, index);
+            
             return { 
-                "file": img.imagePath,
+                "file": file,
                 "previewUrl": img.imagePath,
                 "isMain": img.isMain
             }
         }));
+
+        setImages(response?.data.map((img, index) => {
+            const file = newFile(img, index);
+             
+            return { 
+                "file": file,
+                "previewUrl": img.imagePath,
+                "isMain": img.isMain
+            }
+        }));
+    }
+
+    const handleIsMainImage = (index) => {
+        setImages(images.map((img, i) => {
+            index === i ? img.isMain = true : img.isMain = false;
+            return img; 
+        }))
+    }
+
+    const handleRemoveImage = (index) => {
+        if (previews[0]?.default === true ) {
+            return;    
+        }
+
+        const updatedPreviews = previews.filter((_, i) => i !== index);
+        const newDefaultImage = [{ ...defaultImage }];
+
+        setPreviews(updatedPreviews.length <= 0 ? newDefaultImage : updatedPreviews);
+        setImages(updatedPreviews.length <= 0 ? newDefaultImage : updatedPreviews);
     }
 
     const verifyGroup = () => {
@@ -133,64 +224,6 @@ export default function ProductUpdate() {
                 break;
         }
     };
-
-    const handleFileChange = (event) => {
-        if (previews[0]?.default === true ) {
-            setPreviews([]);    
-        }
-        
-        const files = Array.from(event.target.files); // Converter FileList em array
-
-        const newPreviews = files.map((file) => ({
-            file,
-            previewUrl: URL.createObjectURL(file),
-            isMain: false
-        }));
-
-        setImages((prevImages) => [...prevImages, ...newPreviews]);
-        setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
-    };
-
-    const handleImageUpload = async (productId) => {
-        if (!images) return;
-
-        let response;
-        images.forEach(async (img) => {
-            const formData = new FormData();
-            formData.append("file", img.file);
-            response = await api.uploadImage(productId, img.isMain, formData);  
-            
-            if(response.status !== 200){
-                toast.warn(response.error);
-                console.log(response.message);
-                return true;
-            }
-        });
-        
-        return false;
-    };
-
-    const handleIsMainImage = (index) => {
-        setImages(images.map((img, i) => {
-            index === i ? img.isMain = true : img.isMain = false;
-            return img; 
-        }))
-    }
-
-    const handleRemoveImage = (index) => {
-        const updatedPreviews = [...previews];
-        updatedPreviews.splice(index, 1);
-
-        setImages(updatedPreviews);
-        setPreviews(updatedPreviews);
-
-        if (!updatedPreviews) {
-            setPreviews({
-                default: true,
-                previewUrl: '/assets/images/icon_logo.png'
-            })
-        }
-    }
 
     const verifyIsMainImage = () => {
         if (!previews) {
@@ -413,8 +446,8 @@ export default function ProductUpdate() {
                         )}
 
                         <div className="group-input-file">
-                            <label disabled={disableFields} className="input-file" htmlFor="input-file">Selecionar imagem</label>
-                            <input disabled={disableFields} id="input-file" type="file" accept="image/*" multiple onChange={handleFileChange} />
+                            <label disabled={disableFields} className="input-file" htmlFor="input-file">Adicionar imagem</label>
+                            <input disabled={disableFields} id="input-file" type="file" accept="image/jpeg" multiple onChange={handleFileChange} />
                         </div>
                     </div>
                 </div>
