@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import * as S from './styled'; 
-import Button  from "../../../../components/button";
+import * as S from './styled';
+import Button from "../../../../components/button";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Cookies from 'js-cookie';
@@ -12,9 +12,10 @@ const apiUser = new userAdminApi();
 const api = new ProductApi();
 
 export default function ProductManagementScreen() {
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  //Ativar/Desativar botões de acordo com o grupo do usuário
   const [doNotDisplayStatus, setDoNotDisplayStatus] = useState(false);
   const [doNotDisplayViewProduct, setDoNotDisplayViewProduct] = useState(false);
   const [doNotDisplayButton, setDoNotDisplayButton] = useState(false);
@@ -29,62 +30,78 @@ export default function ProductManagementScreen() {
       product.brand.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const listAllProducts = async () => {
-      let response = await api.listAll();
-      
-      if (response.status !== 200) {
-          toast.warn(response.error);
-          console.log(response.message);
-          return;
-      }
+  //Paginação
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
-      setProducts(response.data);
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const listAllProducts = async () => {
+    let response = await api.listAll();
+
+    if (response.status !== 200) {
+      toast.warn(response.error);
+      console.log(response.message);
+      return;
+    }
+
+    setProducts(response.data);
   }
 
   const handleRegister = () => {
-      if (apiUser.getUser().userGroup === "ESTOQUISTA") {
-        toast.warning("Apenas um admin pode inserir um produto!")
-        return;
-      }
+    if (apiUser.getUser().userGroup === "ESTOQUISTA") {
+      toast.warning("Apenas um admin pode inserir um produto!")
+      return;
+    }
 
-      navigation("/admin/product/register");
+    navigation("/admin/product/register");
   }
 
   const handleEdit = (productId) => {
-      const product = products.filter(product => product.id === productId);
-      Cookies.set("selected-product", JSON.stringify(product), { expires: 1 });
-      navigation("/admin/product/update", { state: product });
+    const product = products.filter(product => product.id === productId);
+    Cookies.set("selected-product", JSON.stringify(product), { expires: 1 });
+    navigation("/admin/product/update", { state: product });
   };
 
   const viewProductDetails = (productId) => {
     const product = products.find(product => product.id === productId);
     toast.warning("Em desenvolvimento...")
     navigation(`/admin/product/view/${product.id}`, { state: product });
-};
+  };
 
   const handleToggleStatus = async (productId, currentStatus) => {
-      const newStatus = currentStatus === 'ATIVADO' ? 'DESATIVADO' : 'ATIVADO';
-      
-      const confirmChange = window.confirm(`Tem certeza que deseja alterar o status do produto ${productId} para ${newStatus}?`);
-      
-      if(!confirmChange){
-        return;
-      }
+    const newStatus = currentStatus === 'ATIVADO' ? 'DESATIVADO' : 'ATIVADO';
 
-      const response = await api.handleStatus(productId);
-      if (response.status !== 204) {
-        toast.error(response.error);
-        console.log(response.message);
-        return;
-      }
+    const confirmChange = window.confirm(`Tem certeza que deseja alterar o status do produto ${productId} para ${newStatus}?`);
 
-      setProducts(
-        products.map((product) =>
-          product.id === productId ? { ...product, status: newStatus } : product
-        )
-      );
+    if (!confirmChange) {
+      return;
+    }
 
-      toast.success(`Produto ${newStatus} com sucesso`);
+    const response = await api.handleStatus(productId);
+    if (response.status !== 204) {
+      toast.error(response.error);
+      console.log(response.message);
+      return;
+    }
+
+    setProducts(
+      products.map((product) =>
+        product.id === productId ? { ...product, status: newStatus } : product
+      )
+    );
+
+    toast.success(`Produto ${newStatus} com sucesso`);
   };
 
   const verifyGroup = () => {
@@ -129,38 +146,38 @@ export default function ProductManagementScreen() {
       <S.Title> Lista de Produtos </S.Title>
 
       <div className="group-actions">
-          <S.SearchBar
-            type="text"
-            placeholder="Pesquisar por nome ou marca..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button
-              myHeight={6}
-              myWidth={8}
-              myMargin={"0em 1em"}
-              myBackgroundColor={"#007bff"}
-              myColor={"white"}
-              myMethod={listAllProducts}
-            >
-              ↻
-            </Button>
-          <Button
-              myHeight={6}
-              myWidth={8}
-              myMargin={"0em 1em 0em 0em"}
-              myBackgroundColor={"#007bff"}
-              myColor={"white"}
-              myMethod={handleRegister}
-            >
-              +
-            </Button>
+        <S.SearchBar
+          type="text"
+          placeholder="Pesquisar por nome ou marca..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button
+          myHeight={6}
+          myWidth={8}
+          myMargin={"0em 1em"}
+          myBackgroundColor={"#007bff"}
+          myColor={"white"}
+          myMethod={listAllProducts}
+        >
+          ↻
+        </Button>
+        <Button
+          myHeight={6}
+          myWidth={8}
+          myMargin={"0em 1em 0em 0em"}
+          myBackgroundColor={"#007bff"}
+          myColor={"white"}
+          myMethod={handleRegister}
+        >
+          +
+        </Button>
       </div>
 
       <S.Table>
         <thead>
           <S.TableRow>
-          <S.TableHeader>Id</S.TableHeader>
+            <S.TableHeader>Id</S.TableHeader>
             <S.TableHeader>Nome</S.TableHeader>
             <S.TableHeader>Time</S.TableHeader>
             <S.TableHeader>Temporada</S.TableHeader>
@@ -173,7 +190,7 @@ export default function ProductManagementScreen() {
           </S.TableRow>
         </thead>
         <tbody>
-          {filteredProducts.map((product) => (
+          {currentProducts.map((product) => (
             <S.TableRow key={product.id}>
               <S.TableCell>{product.id}</S.TableCell>
               <S.TableCell>{product.name}</S.TableCell>
@@ -194,16 +211,37 @@ export default function ProductManagementScreen() {
                 >
                   {product.status === 'ATIVADO' ? 'Desativar' : 'Ativar'}
                 </S.ActionButton>
-                <S.ActionButton 
+                <S.ActionButton
                   disabled={doNotDisplayViewProduct}
                   onClick={() => viewProductDetails(product.id)}>
-                    Visualizar
+                  Visualizar
                 </S.ActionButton>
               </S.TableCell>
             </S.TableRow>
           ))}
         </tbody>
       </S.Table>
+
+      {/* Botões da paginação */}
+      <S.Pagination>
+        <S.Pagination>
+          <S.PaginationButton
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}>
+            {"<"}
+          </S.PaginationButton>
+
+          <S.PageNumber>Página {currentPage} de {totalPages}</S.PageNumber>
+
+          <S.PaginationButton
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}>
+            {">"}
+          </S.PaginationButton>
+        </S.Pagination>
+
+
+      </S.Pagination>
     </S.Container>
   );
 }

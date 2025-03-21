@@ -80,3 +80,32 @@ export const ActionButton = styled.button`
     background-color: ${(props) => (props.disabled ? '#ccc' : '#004080')};
   }
 `;
+
+// Paginação da tela
+export const Pagination = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+export const PageNumber = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 10px;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
+  }
+`;
