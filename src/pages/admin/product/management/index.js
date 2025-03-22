@@ -75,8 +75,7 @@ export default function ProductManagementScreen() {
 
   const viewProductDetails = (productId) => {
     const product = products.find(product => product.id === productId);
-    toast.warning("Em desenvolvimento...")
-    navigation(`/admin/product/view/${product.id}`, { state: product });
+    navigation("/admin/product/productPreview", { state: product });
   };
 
   const handleToggleStatus = async (productId, currentStatus) => {

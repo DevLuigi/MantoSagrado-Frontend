@@ -10,6 +10,7 @@ import UserManagementAdmin from "./pages/admin/user/management";
 import ProductManagementAdmin from "./pages/admin/product/management";
 import ProductRegisterAdmin from "./pages/admin/product/register";
 import ProductUpdateAdmin from "./pages/admin/product/update";
+import ProductPreview from "./pages/admin/product/productPreview/index.js";
 
 export default function RoutesProject() {
     return (
@@ -27,6 +28,7 @@ export default function RoutesProject() {
                 <Route path="/admin/product/management" element={<ProductManagementAdmin />}/>
                 <Route path="/admin/product/register" element={<ProductRegisterAdmin />}/>
                 <Route path="/admin/product/update" element={<ProductUpdateAdmin />}/>
+                <Route path="/admin/product/productPreview" element={<ProductPreview />}/>
             </Routes>
         </BrowserRouter>
     )
