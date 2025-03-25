@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // Barra de consulta
 export const SearchBar = styled.input`
-  width: 90%;
+  width: 100%;
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ddd;

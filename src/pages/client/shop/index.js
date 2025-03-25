@@ -17,23 +17,16 @@ const api = new ProductApi();
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  // const [id, setId] = useState(0);
-  // const [name, setName] = useState("");
-  // const [teamName, setTeamName] = useState("");
-  // const [season, setSeason] = useState("");
-  // const [price, setPrice] = useState("");
-  // const [previews, setPreviews] = useState([]);
-
-  const location = useLocation();
   const navigation = useNavigate();
 
   const filteredProducts = products?.filter(
     (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.season.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.teamName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.season?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.brand?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const listAllProducts = async () => {
@@ -48,49 +41,73 @@ export default function Shop() {
     setProducts(response.data);
   }
 
+  const handleProductImages = async () => {
+    console.log(products);
+    if (products.length === 0) {
+      console.log("Não há produtos para carregar imagens");
+      return;
+    }
+    const updatedProducts = await Promise.all(products.map(async (product, index) => {
+      let response = await api.listAllImagesByProduct(product.id);
+
+      if (response.status !== 200) {
+        console.log(response.message);
+        return product; // Retorna o produto sem alterações se falhar
+      }
+
+      const images = response?.data.map((img, i) => ({
+        ...img,
+        isMain: index === i
+      }));
+
+      return {
+        ...product,
+        previewUrl: images[0]?.imagePath // Pegando a URL da primeira imagem
+      };
+    }));
+
+    setImagesLoaded(true);
+    setProducts(updatedProducts);
+  };
+
   const handleProductDetails = (productId) => {
     const product = products.find(product => product.id === productId);
     navigation("/productPreview", { state: product });
   };
 
   const handleAddToCart = (productId) => {
-    const product = products.find(product => product.id === productId);
-    navigation("/cart", { state: product });
+    const product = products.find((product) => product.id === productId);
+    if (!product) {
+      toast.warning("Produto não encontrado");
+      return;
+    }
+
+    let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+
+    const existingItem = cart.find((item) => item.id === product.id);
+    
+    if (existingItem) {
+      cart = cart.map((item) =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
+
+    // toast.success(`${product.name} do ${product.teamName} adicionado ao carrinho!`);
   };
-
-  // const handleProductInformation = async () => {
-  //   if (!location.state) {
-  //     return;
-  //   }
-
-  //   setId(location.state.id);
-  //   setName(location.state.name);
-  //   setTeamName(location.state.teamName);
-  //   setSeason(location.state.season);
-  //   setPrice(location.state.price);
-
-  //   let response = await api.listAllImagesByProduct(location.state.id);
-  //   if (response.status !== 200) {
-  //     toast.error(response.error);
-  //     console.log(response.message);
-  //     return;
-  //   }
-
-  //   setPreviews(response?.data.map((img, index) => {
-  //     const file = newFile(img, index);
-
-  //     return {
-  //       "file": file,
-  //       "previewUrl": img.imagePath,
-  //       "isMain": img.isMain
-  //     }
-  //   }));
-  // }
 
   useEffect(() => {
     listAllProducts();
-    // handleProductInformation();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (products.length > 0 && !imagesLoaded) {
+      handleProductImages();
+    }
+  }, [products]);
 
   return (
     <S.Container>
@@ -105,44 +122,41 @@ export default function Shop() {
       </div>
 
       <S.Container>
-        {filteredProducts.map((product) => (
-          <S.Card key={product.id}>
-            {/* Carrossel de Imagens
-            {product.previews && product.previews.length > 0 && (
-              <Swiper
-                modules={[Navigation]}
-                navigation
-                spaceBetween={10}
-                slidesPerView={1}
-                style={{ width: '100%', height: '200px', marginBottom: '1em' }}
-              >
-                {product.previews.map((img, index) => (
-                  <SwiperSlide key={index}>
-                    <img
-                      src={img.previewUrl}
-                      alt={`Preview ${index}`}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            )} */}
+        <Swiper
+          modules={[Navigation]}
+          navigation={{ enabled: true }}
+          spaceBetween={1}
+          slidesPerView={5}
+          loop={true}
+          grabCursor={true}
+          effect="fade"
+          style={{ width: '90%', height: '65dvh', marginBottom: '1em' }}
+        >
+          {filteredProducts.map((img, index) => (
+            <SwiperSlide key={index}>
+              <S.Card key={products.id}>
+                <S.CardHeader>
+                  <img
+                    src={img.previewUrl}
+                    alt={`Preview ${index}`}
+                    style={{ width: '100%', height: '30dvh', objectFit: 'cover', borderRadius: '10px' }}
+                  />
+                </S.CardHeader>
 
-            <S.CardHeader>
-              <S.CardTitle>{product.name}</S.CardTitle>
-              <S.CardSubtitle>{product.teamName}</S.CardSubtitle>
-            </S.CardHeader>
+                <S.CardBody>
+                  <S.CardTitle>{img.name}</S.CardTitle>
+                  <S.CardSubtitle>{img.teamName}</S.CardSubtitle>
+                  <S.CardText><strong>Temporada:</strong> {img.season}</S.CardText>
+                  <S.CardText><strong>Preço: </strong> R$ {img.price}</S.CardText>
+                </S.CardBody>
 
-            <S.CardBody>
-              <S.CardText><strong>Temporada:</strong> {product.season}</S.CardText>
-              <S.CardText><strong>Preço:</strong> {product.price}</S.CardText>
-            </S.CardBody>
-
-            {/* Botões: Comprar e Detalhes */}
-            <S.Button onClick={() => handleProductDetails(product.id)}>Detalhes</S.Button>
-            <S.Button onClick={() => handleAddToCart(product.id)}>Comprar</S.Button>
-          </S.Card>
-        ))}
+                {/* Botões: Comprar e Detalhes */}
+                <S.Button onClick={() => handleProductDetails(img.id)}>Detalhes</S.Button>
+                <S.Button onClick={() => handleAddToCart(img.id)}>Comprar</S.Button>
+              </S.Card>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </S.Container>
 
     </S.Container>
