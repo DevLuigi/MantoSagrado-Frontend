@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import { useState } from "react";
+import { Star } from "lucide-react";
 
 const Container = styled.div`
-  display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -22,9 +24,13 @@ const Container = styled.div`
   }
   
   h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    background: #4299e1;
+  color: white;
+  width: 88%;
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 16px;
   }
   
   .product-preview {
@@ -63,22 +69,22 @@ const Container = styled.div`
   }
   
   .product-details .price {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #008000;
+    font-size: 1.3em;
+    color:rgb(0, 0, 0);
   }
   
   .product-details .rating {
-    color: #ffc107;
+    color:rgb(0, 0, 0);
   }
   
   .product-details .quantity {
-    color: #777;
+    color: rgb(0, 0, 0);
   }
   
   .product-details .buy-button {
     background-color: #008000;
     color: #fff;
+    align-itens: center;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -89,7 +95,43 @@ const Container = styled.div`
   
   .product-details .buy-button:hover {
     background-color: #006400;
+    &:disabled {
+    background: #2d3748;  // Cinza mais escuro quando desativado
+    color: #718096;  // Texto mais apagado
+    cursor: not-allowed;
+  }
+  }  
+    
+  .avaliacao{
+  display: flex;
+  flex-direction: row;
+  }
+  
+  .avaliacao>p{
+  margin-right: .5em
+  }
+  
+  .comeback{
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  margin-top: 1em;
+  margin-left: 1em;
   }`
 
-export { Container };
+const StarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 10px;
+`;
+
+const StarIcon = styled(Star)`
+  color: ${(props) => (props.filled ? "#FFD700" : "#555")};
+  cursor: pointer;
+  transition: color 0.3s;
+  } 
+`;
+
+export { Container, StarContainer, StarIcon };
 

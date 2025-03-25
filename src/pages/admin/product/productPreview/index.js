@@ -1,7 +1,6 @@
-import React from 'react';
-import { Container } from './styled';
-import AuthBox from '../../../../components/auth-box';
 import { useEffect, useState } from "react";
+import { Container, StarContainer, StarIcon } from './styled';
+import AuthBox from '../../../../components/auth-box';
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,10 +8,9 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
-
+import Button from "../../../../components/button";
 import userAdminApi from "../../../../service/admin/userAdmin.js";
 import ProductApi from "../../../../service/admin/productAdmin.js";
-
 import { newFile } from "../../../../service/utils/fileUtils.js";
 
 const api = new ProductApi();
@@ -72,18 +70,46 @@ export default function ProductPreview() {
     }));
   }
 
+  function StarRating({ rating }) {
+    return (
+      <StarContainer>
+        {[...Array(5)].map((_, i) => (
+          <StarIcon
+            key={i}
+            size={20}
+            filled={i < rating}
+          />
+        ))}
+      </StarContainer>
+    );
+  }
+
+  const comeBack = () => {
+    navigation("/admin/product/management");
+  }
+
   useEffect(() => {
     handleUserInformation();
   }, [])
 
   return (
     <Container>
+
+      <div className="comeback">
+        <Button
+          myHeight={6}
+          myWidth={8}
+          myBackgroundColor={"#007bff"}
+          myColor={"white"}
+          myMethod={comeBack}
+        >
+          Voltar
+        </Button>
+      </div>
       <AuthBox
         myWidth={40} myHeight={95}
       >
-        <h1>
-          Preview de produtos
-        </h1>
+        <h1>Preview do produto</h1>
         <div className="product-preview">
           <div>
             {/* Carrossel de Imagens */}
@@ -109,10 +135,11 @@ export default function ProductPreview() {
           </div>
           <div className="product-details">
             <h2>{name}</h2>
-            <p className="price">{price}</p>
-            <p className="rating">{evaluation}</p>
-            <p className="quantity">{quantity}</p>
-            <button className="buy-button">Comprar</button>
+            <p className="quantity">Estoque: {quantity}</p>
+            <p className="price">Preço: R$ {price}</p>
+            <div className="avaliacao"><p className="rating">Avaliação:</p>
+              {<StarRating rating={evaluation} />}</div>
+            <button disabled={true} className="buy-button">Comprar</button>
           </div>
         </div>
       </AuthBox>
