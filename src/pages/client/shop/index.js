@@ -72,7 +72,7 @@ export default function Shop() {
 
   const handleProductDetails = (productId) => {
     const product = products.find(product => product.id === productId);
-    navigation("/productPreview", { state: product });
+    navigation("/product/ClientPreview", { state: product });
   };
 
   const handleAddToCart = (productId) => {
