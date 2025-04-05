@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
-import { Star } from "lucide-react";
 
 const Container = styled.div`
     display: flex;
@@ -8,10 +6,11 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
 
-    background-color: #fffdf9;
+    background: rgb(40,40,40);
+    background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%);
 
-    height: 100%;
-    width: 100%;
+    height: 100dvh;
+    padding-left: 1em;
   
   .container {
     width: 80%;
@@ -25,26 +24,29 @@ const Container = styled.div`
   
   h1 {
     background: #4299e1;
-  color: white;
-  width: 88%;
-  padding: 12px;
-  text-align: center;
-  border-radius: 8px;
-  margin-bottom: 16px;
+    color: white;
+    width: 88%;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 16px;
   }
   
   .product-preview {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+
+    height: 100%;
+    width: 100%;
   }
   
   .product-image {
-    flex: 1;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 50%;
   }
   
   .product-image img {
@@ -54,84 +56,59 @@ const Container = styled.div`
   }
   
   .product-details {
+    display: flex;
     flex-direction: column;
-    align-itens: center;
-    padding-left: 20px;
+    justify-content: space-between;
+    
+    height: 25em;
+    width: 50%;
+
+    margin-right: 2em;
   }
   
   .product-details h2 {
-    color: #333;
-    margin-top: 0;
+    font-size: 2em;
+    font-weight: 700;
+    margin: 0.2em 0em;
   }
   
   .product-details p {
-    margin: 5px 0;
+    margin: 1em 0;
   }
   
   .product-details .price {
-    font-size: 1.3em;
-    color:rgb(0, 0, 0);
-  }
-  
-  .product-details .rating {
-    color:rgb(0, 0, 0);
-  }
-  
-  .product-details .quantity {
-    color: rgb(0, 0, 0);
+    font-size: 2em;
+    font-weight: 700;
+    margin: .5em 0em;
   }
   
   .product-details .buy-button {
-    background-color: #008000;
-    color: #fff;
-    align-itens: center;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
+    width: 100%;
   }
-  
-  .product-details .buy-button:hover {
-    background-color: #006400;
-    &:disabled {
-    background: #2d3748;  // Cinza mais escuro quando desativado
-    color: #718096;  // Texto mais apagado
-    cursor: not-allowed;
-  }
-  }  
     
-  .avaliacao{
-  display: flex;
-  flex-direction: row;
+  .avaliacao {
+    display: flex;
+    flex-direction: row;
   }
   
-  .avaliacao>p{
-  margin-right: .5em
+  .avaliacao > p {
+    margin-right: .5em;
   }
   
-  .comeback{
-  display: flex;
-  justify-content: start;
-  width: 100%;
-  margin-top: 1em;
-  margin-left: 1em;
+  .comeback {
+    display: flex;
+    justify-content: start;
+    width: 100%;
+
+    margin-bottom: 2em;
   }`
 
 const StarContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
 `;
 
-const StarIcon = styled(Star)`
-  color: ${(props) => (props.filled ? "#FFD700" : "#555")};
-  cursor: pointer;
-  transition: color 0.3s;
-  } 
-`;
 
-export { Container, StarContainer, StarIcon };
+export { Container, StarContainer };
 

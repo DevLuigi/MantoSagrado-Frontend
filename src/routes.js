@@ -19,6 +19,7 @@ export default function RoutesProject() {
     return (
         <BrowserRouter>
             <Routes>
+                {/* Admin routes */}
                 <Route path="/admin/login" element={<LoginAdmin />} />
                 <Route path="/admin/menu" element={<MenuAdmin />} />
 
@@ -32,9 +33,13 @@ export default function RoutesProject() {
                 <Route path="/admin/product/register" element={<ProductRegisterAdmin />} />
                 <Route path="/admin/product/update" element={<ProductUpdateAdmin />} />
                 <Route path="/admin/product/productPreview" element={<ProductPreview />} />
+                
+                {/* ========================================================================== */}
+
+                {/* Client routes */}
+                <Route path="/" element={<Shop />} />
                 <Route path="/product/ClientPreview" element={<ClientPreview />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/" element={<Shop />} />
             </Routes>
         </BrowserRouter>
     )

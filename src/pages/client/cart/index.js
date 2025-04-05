@@ -8,11 +8,12 @@ import * as S from './styled';
 export default function Cart() {
   const [cart, setCart] = useState(() => {
     const savedCart = Cookies.get("cart");
+    console.log(savedCart);
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigation = useNavigate();
 
   const removeFromCart = async (id) => {
     setLoading(true);
@@ -38,8 +39,13 @@ export default function Cart() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
+  const handleCheckout = () => {
+      toast.success("Compra finalizada com sucesso!");
+      navigation("/");
+  }
+
   const comeBack = () => {
-    navigate("/");
+    navigation("/");
   };
 
   useEffect(() => {
@@ -47,42 +53,72 @@ export default function Cart() {
   }, [cart]);
 
   return (
-    <S.Container>
-      <Button
-        myHeight={6}
-        myWidth={8}
-        myBackgroundColor={"#007bff"}
-        myColor={"white"}
-        myMethod={comeBack}
-      >
-        Voltar
-      </Button>
-
-      <h2>Carrinho</h2>
-      <S.CartContainer>
+      <S.Container>
+        <Button
+          myHeight={6}
+          myWidth={8}
+          myMargin={"1em"}
+          myBackgroundColor={"#F3C220"}
+          myColor={"white"}
+          myMethod={comeBack}
+        >
+          Voltar
+        </Button>
+    
         {cart.length === 0 ? (
-          <p>O carrinho está vazio.</p>
+          <S.EmptyCart>
+            <S.TextEmptyCart>Oops!!! O carrinho está vazio ☹️</S.TextEmptyCart>
+          </S.EmptyCart>
         ) : (
-          cart.map((item) => (
-            <S.CartItem key={item.id}>
-              <span>
-                {item.name} {item.teamName} {item.kitType} {item.season} - R${item.price} x{" "}
-                <input
-                  type="number"
-                  value={item.quantity}
-                  min="1"
-                  onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+          <S.CartContainer>
+            {cart.map((item, i) => (
+              <S.CartItem key={item.id}>
+                <img
+                  src={item.previewUrl}
+                  alt={`Preview ${i}`}
+                  style={{
+                    width: '10vw',
+                    height: '20vh',
+                    objectFit: 'cover',
+                    borderRadius: '10px',
+                  }}
                 />
-              </span>
-              <S.RemoveButton onClick={() => removeFromCart(item.id)}>
-                Remover do carrinho
-              </S.RemoveButton>
-            </S.CartItem>
-          ))
+                <div>
+                  <span>
+                    {item.name} {item.teamName} {item.kitType} {item.season} - R${item.price} x{" "}
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      min="1"
+                      onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                    />
+                  </span>
+                </div>
+                <Button
+                  myHeight={6}
+                  myWidth={8}
+                  myMargin={"0em 1em"}
+                  myBackgroundColor={"red"}
+                  myColor={"white"}
+                  myMethod={() => removeFromCart(item.id)}
+                >
+                  Remover
+                </Button>
+              </S.CartItem>
+            ))}
+            <S.TotalPrice>Total: R${calculateTotal()}</S.TotalPrice>
+            <Button
+              myHeight={6}
+              myWidth={12}
+              myBackgroundColor={"#F3C220"}
+              myColor={"white"}
+              myMethod={handleCheckout}
+            >
+              Finalizar Compra
+            </Button>
+          </S.CartContainer>
         )}
-        <S.TotalPrice>Total: R${calculateTotal()}</S.TotalPrice>
-        <S.Button onClick={() => navigate("/checkout")}>Finalizar Compra</S.Button>
-      </S.CartContainer>
-    </S.Container>
-  );
+      </S.Container>
+    );
+    
 }

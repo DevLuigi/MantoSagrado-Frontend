@@ -22,7 +22,7 @@ export default function Header(props) {
 
     return (
         <S.Container>
-            <S.Logo src="/assets/images/icon_logo.png" alt="logo-image" />
+            <S.Logo src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
 
             <S.NavWrapper>
                 <S.NavLinks>

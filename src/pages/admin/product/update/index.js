@@ -24,7 +24,7 @@ const api = new ProductApi();
 export default function ProductUpdate() {
     const defaultImage = {
         default: true,
-        previewUrl: '/assets/images/icon_logo.png'
+        previewUrl: '/assets/images/icon_logo.jpg'
     }
 
     const [id, setId] = useState(0);
@@ -255,7 +255,7 @@ export default function ProductUpdate() {
     return (
         <Container>
             <Link to={"/"}>
-                <img src="/assets/images/icon_logo.png" alt="logo-image" />
+                <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
             <AuthBox myWidth={40} myHeight={105}>
                 <h3> Alterando produto </h3>
