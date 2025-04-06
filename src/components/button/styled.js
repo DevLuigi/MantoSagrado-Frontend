@@ -18,6 +18,7 @@ const Container = styled.button`
     font-weight: bold;
 
     background-color: ${(props) => props?.style?.isTransparent ? "transparent" : props?.style?.myBackgroundColor};
+    background-color: ${(props) => props?.style?.myDisabled ? darken(0.2, props?.style?.myBackgroundColor) : props?.style?.myBackgroundColor};
     color: ${(props) => props?.style?.myColor};
 
     cursor: pointer;
@@ -40,7 +41,7 @@ const Container = styled.button`
 
     &:hover {
         transition: .5s;
-        background-color: ${(props) => props?.style?.myBackgroundColor && darken(0.1, props?.style?.myBackgroundColor)};
+        background-color: ${(props) => (props?.style?.myBackgroundColor && !props?.style?.myDisabled) && darken(0.1, props?.style?.myBackgroundColor)};
         color: ${(props) => props?.style?.myColor && lighten(0.1, props?.style?.myColor)};
     }
 `;

@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { Container, StarContainer, StarIcon } from './styled';
-import AuthBox from '../../../components/auth-box/index.js';
 import { toast } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { Container, StarContainer } from './styled';
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Cookies from 'js-cookie';
 
+import AuthBox from '../../../components/auth-box/index.js';
 import Button from "../../../components/button";
+
 import ProductApi from "../../../service/admin/productAdmin.js";
 import { newFile } from "../../../service/utils/fileUtils.js";
+import { Star, StarHalf } from "lucide-react";
 
 const api = new ProductApi();
 
@@ -28,15 +32,14 @@ export default function ClientPreview() {
     const [evaluation, setEvaluation] = useState(0);
     const [status, setStatus] = useState("");
     const [previews, setPreviews] = useState([]);
-    const [products, setProducts] = useState([]);
 
     const location = useLocation();
     const navigation = useNavigate();
 
     const handleUserInformation = async () => {
         if (!location.state) {
-            toast.warn("Selecione um produto antes de alterar!");
-            navigation("/admin/product/management");
+            toast.warn("Selecione um produto antes de ver os detalhes!");
+            navigation("/");
             return;
         }
 
@@ -70,47 +73,47 @@ export default function ClientPreview() {
         }));
     }
 
-    function StarRating({ rating }) {
-        return (
-            <StarContainer>
-                {[...Array(5)].map((_, i) => (
-                    <StarIcon
-                        key={i}
-                        size={20}
-                        filled={i < rating}
-                    />
-                ))}
-            </StarContainer>
-        );
+    const handleAddToCart = (showMessage) => {
+        const mainImage = previews.find(item => item.isMain);
+        let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+
+        const existingItem = cart.find((item) => item.id === id);
+        if (existingItem) {
+            cart = cart.map((item) =>
+                item.id === id ? { ...item, previewUrl: mainImage.previewUrl, quantity: item.quantity + 1 } : item
+            );
+        } else {
+            const mainImage = previews.find(item => item.isMain);
+            cart.push({ 
+                ...{
+                    id,
+                    name,
+                    teamName, 
+                    season, 
+                    kitType,
+                    brand, 
+                    description, 
+                    quantity, 
+                    price, 
+                    evaluation,
+                    status, 
+                    "previewUrl": mainImage.previewUrl
+                }, quantity: 1 
+            });
+        }
+
+        Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
+        if (showMessage) toast.success(`Produto adicionado ao carrinho!`);
+    };
+
+    const handleFinishOrder = () => {
+        handleAddToCart(false);
+        navigation("/cart");
     }
 
     const comeBack = () => {
         navigation("/");
     }
-
-    const handleAddToCart = (productId) => {
-        const product = products.find((product) => product.id === productId);
-        if (!product) {
-            toast.warning("Produto não encontrado");
-            return;
-        }
-
-        let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
-
-        const existingItem = cart.find((item) => item.id === product.id);
-
-        if (existingItem) {
-            cart = cart.map((item) =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-            );
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
-
-        Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
-
-        // toast.success(`${product.name} do ${product.teamName} adicionado ao carrinho!`);
-    };
 
     useEffect(() => {
         handleUserInformation();
@@ -123,19 +126,19 @@ export default function ClientPreview() {
                 <Button
                     myHeight={6}
                     myWidth={8}
-                    myBackgroundColor={"#007bff"}
+                    myBackgroundColor={"#F3C220"}
                     myColor={"white"}
                     myMethod={comeBack}
                 >
                     Voltar
                 </Button>
             </div>
-            <AuthBox
-                myWidth={40} myHeight={95}
-            >
 
+            <AuthBox
+                myWidth={80} myHeight={75}
+            >
                 <div className="product-preview">
-                    <div>
+                    <div className="product-image">
                         {/* Carrossel de Imagens */}
                         {previews.length > 0 && (
                             <Swiper
@@ -157,13 +160,46 @@ export default function ClientPreview() {
                             </Swiper>
                         )}
                     </div>
+
                     <div className="product-details">
-                        <h2>{name}</h2>
-                        <p className="quantity">Detalhes: {description}</p>
-                        <p className="price">Preço: R$ {price}</p>
-                        <div className="avaliacao"><p className="rating">Avaliação:</p>
-                            {<StarRating rating={evaluation} />}</div>
-                        <button className="buy-button" onClick={handleAddToCart}>Comprar</button>
+                        <div>
+                            <h2>{name + ' - ' + teamName + ' / ' + season}</h2>
+                            <StarContainer>
+                                {[...Array(5)].map((_, i) => {
+                                    const fullStars = Math.floor(evaluation);
+                                    const decimal = evaluation - fullStars;
+
+                                    if (i < fullStars) {
+                                        // Estrela completa
+                                        return <Star key={i} size={20} fill="yellow" />;
+                                    } else if (i === fullStars && decimal >= 0.25 && decimal < 0.75) {
+                                        // Meia estrela
+                                        return <StarHalf key={i} size={20} fill="yellow" />;
+                                    }
+                                })}
+                            </StarContainer>
+                            <p className="price">R$ {price}</p>
+                            <p><b>Marca:</b> {brand} </p>
+                            <p><b>Tipo de camisa:</b> {kitType} </p>
+                            <p><b>Detalhes:</b> {description}</p>
+                        </div>
+                        <div className="button-group">
+                            <Button  
+                                myHeight={6}
+                                myBackgroundColor={"#F3C220"}
+                                myMargin={"1em 0em"}
+                                myColor={"white"}
+                                myMethod={() => handleAddToCart(true)}>
+                                Adicionar ao carrinho
+                            </Button>
+                            <Button  
+                                myHeight={6}
+                                myBackgroundColor={"#F3C220"}
+                                myColor={"white"}
+                                myMethod={handleFinishOrder}>
+                                Comprar
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </AuthBox>

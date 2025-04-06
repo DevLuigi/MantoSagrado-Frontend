@@ -104,7 +104,7 @@ export default function Update() {
     return (
         <Container>
             <Link to={"/"}>
-                <img src="/assets/images/icon_logo.png" alt="logo-image" />
+                <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
             <AuthBox myWidth={40} myHeight={70}>
                 <h3> Alterando usuário </h3>

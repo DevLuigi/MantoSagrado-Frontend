@@ -20,7 +20,7 @@ const api = new ProductApi();
 export default function ProductRegister() {
     const defaultImage = {
         default: true,
-        previewUrl: '/assets/images/icon_logo.png'
+        previewUrl: '/assets/images/icon_logo.jpg'
     }
 
     const [name, setName] = useState("");
@@ -149,7 +149,7 @@ export default function ProductRegister() {
     return (
         <Container>
             <Link to={"/"}>
-                <img src="/assets/images/icon_logo.png" alt="logo-image" />
+                <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
             <AuthBox myWidth={40} myHeight={95}>
                 <h3> Cadastrando um novo produto </h3>
