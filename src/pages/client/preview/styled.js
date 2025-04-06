@@ -82,8 +82,10 @@ const Container = styled.div`
     margin: .5em 0em;
   }
   
-  .product-details .buy-button {
-    width: 100%;
+  .product-details > .button-group {
+    & > button {
+      width: 100%;
+    }
   }
     
   .avaliacao {

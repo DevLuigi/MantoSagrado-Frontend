@@ -1,4 +1,4 @@
-import ServiceBase from '../serviceBase.js';
+import ServiceBase from '../config/serviceBase.js';
 
 export default class userAdminApi extends ServiceBase {
     constructor() {

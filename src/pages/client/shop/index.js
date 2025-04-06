@@ -20,6 +20,9 @@ export default function Shop() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [cart, setCart] = useState(() => {
+    return Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+  });
 
   const navigation = useNavigate();
   const sectionRef = useRef(null);
@@ -45,11 +48,11 @@ export default function Shop() {
   }
 
   const handleProductImages = async () => {
-    console.log(products);
     if (products.length === 0) {
       console.log("Não há produtos para carregar imagens");
       return;
     }
+    
     const updatedProducts = await Promise.all(products.map(async (product, index) => {
       let response = await api.listAllImagesByProduct(product.id);
 
@@ -84,11 +87,10 @@ export default function Shop() {
       toast.warning("Produto não encontrado");
       return;
     }
-
+  
     let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
 
     const existingItem = cart.find((item) => item.id === product.id);
-    
     if (existingItem) {
       cart = cart.map((item) =>
         item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
@@ -97,9 +99,9 @@ export default function Shop() {
       cart.push({ ...product, quantity: 1 });
     }
 
+    setCart(cart);
     Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
-
-    // toast.success(`${product.name} do ${product.teamName} adicionado ao carrinho!`);
+    navigation("/cart");
   };
 
   const scrollToSection = () => {
@@ -118,7 +120,7 @@ export default function Shop() {
 
   return (
     <S.Container>
-      <Header />
+      <Header cart={cart} />
 
       <div className='content-home'>
         <S.HeroSection>

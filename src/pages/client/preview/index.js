@@ -32,7 +32,6 @@ export default function ClientPreview() {
     const [evaluation, setEvaluation] = useState(0);
     const [status, setStatus] = useState("");
     const [previews, setPreviews] = useState([]);
-    const [products, setProducts] = useState([]);
 
     const location = useLocation();
     const navigation = useNavigate();
@@ -74,29 +73,43 @@ export default function ClientPreview() {
         }));
     }
 
-    const handleAddToCart = (productId) => {
-        const product = products.find((product) => product.id === productId);
-        if (!product) {
-            toast.warning("Produto não encontrado");
-            return;
-        }
-
+    const handleAddToCart = (showMessage) => {
+        const mainImage = previews.find(item => item.isMain);
         let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
 
-        const existingItem = cart.find((item) => item.id === product.id);
-
+        const existingItem = cart.find((item) => item.id === id);
         if (existingItem) {
             cart = cart.map((item) =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                item.id === id ? { ...item, previewUrl: mainImage.previewUrl, quantity: item.quantity + 1 } : item
             );
         } else {
-            cart.push({ ...product, quantity: 1 });
+            const mainImage = previews.find(item => item.isMain);
+            cart.push({ 
+                ...{
+                    id,
+                    name,
+                    teamName, 
+                    season, 
+                    kitType,
+                    brand, 
+                    description, 
+                    quantity, 
+                    price, 
+                    evaluation,
+                    status, 
+                    "previewUrl": mainImage.previewUrl
+                }, quantity: 1 
+            });
         }
 
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
-
-        // toast.success(`${product.name} do ${product.teamName} adicionado ao carrinho!`);
+        if (showMessage) toast.success(`Produto adicionado ao carrinho!`);
     };
+
+    const handleFinishOrder = () => {
+        handleAddToCart(false);
+        navigation("/cart");
+    }
 
     const comeBack = () => {
         navigation("/");
@@ -170,14 +183,23 @@ export default function ClientPreview() {
                             <p><b>Tipo de camisa:</b> {kitType} </p>
                             <p><b>Detalhes:</b> {description}</p>
                         </div>
-                        <Button  
-                            className="buy-button"
-                            myHeight={6}
-                            myBackgroundColor={"#F3C220"}
-                            myColor={"white"}
-                            myMethod={handleAddToCart}>
-                            Comprar
-                        </Button>
+                        <div className="button-group">
+                            <Button  
+                                myHeight={6}
+                                myBackgroundColor={"#F3C220"}
+                                myMargin={"1em 0em"}
+                                myColor={"white"}
+                                myMethod={() => handleAddToCart(true)}>
+                                Adicionar ao carrinho
+                            </Button>
+                            <Button  
+                                myHeight={6}
+                                myBackgroundColor={"#F3C220"}
+                                myColor={"white"}
+                                myMethod={handleFinishOrder}>
+                                Comprar
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </AuthBox>

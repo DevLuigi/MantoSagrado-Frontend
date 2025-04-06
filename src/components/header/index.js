@@ -1,24 +1,15 @@
-import React, { useEffect, useState} from "react";
+import React from "react";
 import * as S from './styled';
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
-import Cookies from "js-cookie";
-import {ShoppingCartIcon} from "lucide-react";
+import { ShoppingCartIcon } from "lucide-react";
 
-export default function Header(props) {
+export default function Header({ cart }) {
     const navigate = useNavigate();
-
-    const [cart, setCart] = useState(() => {
-        return Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
-    });
 
     const calculateTotalItems = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
-
-    useEffect(() => {
-        Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
-      }, [cart]);
 
     return (
         <S.Container>
