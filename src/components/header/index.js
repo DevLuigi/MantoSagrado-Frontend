@@ -1,14 +1,23 @@
 import React from "react";
 import * as S from './styled';
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
-import { ShoppingCartIcon } from "lucide-react";
+import { ShoppingCart, ShoppingCartIcon, User, LogOut } from "lucide-react";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 export default function Header({ cart }) {
     const navigate = useNavigate();
 
+    const isLogged = Cookies.get("user-logged");
+
     const calculateTotalItems = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    const handleLogout = () => {
+        Cookies.remove("user-logged");
+        toast.success("Logout efetuado com sucesso");
+        navigate("/");
     };
 
     return (
@@ -17,8 +26,27 @@ export default function Header({ cart }) {
 
             <S.NavWrapper>
                 <S.NavLinks>
-                    <a>Login</a>
-                    <a>Cadastrar</a>
+                {!isLogged ? (
+                        <>
+                            <a onClick={() => navigate("/login")}>Login</a>
+                            <a onClick={() => navigate("/register")}>Cadastrar</a>
+                        </>
+                    ) : (
+                        <>
+                            <User
+                                size={24}
+                                color="#F3C220"
+                                style={{ cursor: "pointer", marginRight: "1em" }}
+                                onClick={() => navigate("/profile")}
+                            />
+                            <LogOut
+                                size={24}
+                                color="#F3C220"
+                                style={{ cursor: "pointer" }}
+                                onClick={handleLogout}
+                            />
+                        </>
+                    )}
                 </S.NavLinks>
 
                 <S.CartIcon onClick={() => navigate("/cart")} style={{ position: 'relative' }}>
@@ -28,20 +56,7 @@ export default function Header({ cart }) {
                         <ShoppingCart size={24} />
                     )}
                     {cart.length > 0 && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "-5px",
-                                right: "-5px",
-                                backgroundColor: "red",
-                                color: "white",
-                                borderRadius: "50%",
-                                padding: "5px 10px",
-                                fontSize: "12px",
-                            }}
-                        >
-                            {calculateTotalItems()}
-                        </div>
+                        <S.ItemCount>{calculateTotalItems()}</S.ItemCount>
                     )}
                 </S.CartIcon>
 

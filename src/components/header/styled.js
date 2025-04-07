@@ -52,4 +52,16 @@ const CartIcon = styled.button`
     }
 `;
 
-export { Container, Logo, NavWrapper, NavLinks, CartIcon };
+const ItemCount = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #F3C220;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+`;
+
+export { Container, Logo, NavWrapper, NavLinks, CartIcon, ItemCount };
