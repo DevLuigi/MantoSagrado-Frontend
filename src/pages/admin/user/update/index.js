@@ -26,7 +26,7 @@ export default function Update() {
     const location = useLocation();
     const navigation = useNavigate();
 
-    const user = api.getUser();
+    const user = api.getUserAdmin();
     const options = ["ADMIN", "ESTOQUISTA"];
 
     const isFormCompleted = Object.values(
@@ -71,7 +71,7 @@ export default function Update() {
         }
 
         if (user.id === response.data.id) {
-            Cookies.set("user-logged", JSON.stringify(response.data), { expires: 7 });   
+            Cookies.set("user-logged-admin", JSON.stringify(response.data), { expires: 7 });   
         }
 
         toast.success("Usuário alterado com sucesso!");

@@ -28,7 +28,7 @@ export default function Menu() {
     };
 
     const verifyGroup = () => {
-      switch (api.getUser().userGroup) {
+      switch (api.getUserAdmin().userGroup) {
         case "ADMIN":
           setDoNotDisplaySales(true);
           break;

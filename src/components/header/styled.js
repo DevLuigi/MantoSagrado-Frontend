@@ -23,19 +23,8 @@ const NavWrapper = styled.div`
 
 const NavLinks = styled.nav`
     display: flex;
-
-    a {
-        text-decoration: none;
-        color: white;
-        font-weight: bold;
-        font-size: 1em;
-        transition: opacity 0.3s;
-        margin-right: 1em;
-
-        &:hover {
-            cursor: pointer;
-            opacity: 0.7;
-        }
+    & > * {
+        margin: 0em .6em;
     }
 `;
 
