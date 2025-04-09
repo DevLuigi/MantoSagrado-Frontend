@@ -1,15 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as S from './styled';
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
-import { ShoppingCartIcon } from "lucide-react";
+import { ShoppingCart, ShoppingCartIcon, User, LogOut, LogIn } from "lucide-react";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 export default function Header({ cart }) {
+    const [isLogged, setIsLogged] = useState(null);
     const navigate = useNavigate();
 
     const calculateTotalItems = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
+
+    const handleLogout = () => {
+        const confirmLogout = window.confirm(`Tem certeza que deseja sair?`);
+        if (!confirmLogout) {
+            return;
+        }
+
+        Cookies.remove("user-logged-client");
+        setIsLogged(null);
+
+        toast.success("Logout efetuado com sucesso");
+        navigate("/");
+    };
+
+    const handleCookie = () => {
+        setIsLogged(Cookies.get("user-logged-client"));
+    }
+
+    useEffect(() => {
+        handleCookie();
+    }, [])
 
     return (
         <S.Container>
@@ -17,34 +40,36 @@ export default function Header({ cart }) {
 
             <S.NavWrapper>
                 <S.NavLinks>
-                    <a>Login</a>
-                    <a>Cadastrar</a>
+                    <User
+                        size={24}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => navigate("/profile")}
+                    />
+                    {
+                        isLogged ?
+                            <LogOut
+                                size={24}
+                                style={{ cursor: "pointer" }}
+                                onClick={handleLogout}
+                            /> 
+                        :
+                            <LogIn 
+                                size={24}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => navigate("/login")}
+                            />
+                    }
+                    <S.CartIcon onClick={() => navigate("/cart")} style={{ position: 'relative' }}>
+                        {cart.length > 0 ? (
+                            <ShoppingCartIcon size={24} />
+                        ) : (
+                            <ShoppingCart size={24} />
+                        )}
+                        {cart.length > 0 && (
+                            <S.ItemCount>{calculateTotalItems()}</S.ItemCount>
+                        )}
+                    </S.CartIcon>
                 </S.NavLinks>
-
-                <S.CartIcon onClick={() => navigate("/cart")} style={{ position: 'relative' }}>
-                    {cart.length > 0 ? (
-                        <ShoppingCartIcon size={24} />
-                    ) : (
-                        <ShoppingCart size={24} />
-                    )}
-                    {cart.length > 0 && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "-5px",
-                                right: "-5px",
-                                backgroundColor: "red",
-                                color: "white",
-                                borderRadius: "50%",
-                                padding: "5px 10px",
-                                fontSize: "12px",
-                            }}
-                        >
-                            {calculateTotalItems()}
-                        </div>
-                    )}
-                </S.CartIcon>
-
             </S.NavWrapper>
         </S.Container>
     );

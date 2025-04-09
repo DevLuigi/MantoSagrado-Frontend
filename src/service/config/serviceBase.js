@@ -9,7 +9,7 @@ export default class ServiceBase {
         });
     }
 
-    getToken() {
+    getTokenClient() {
         let logged = Cookies.get('user-logged');
         if (logged) {
             let cookie = JSON.parse(logged);
@@ -19,7 +19,17 @@ export default class ServiceBase {
         }
     }
 
-    getUser() {
+    getTokenAdmin() {
+        let logged = Cookies.get('user-logged');
+        if (logged) {
+            let cookie = JSON.parse(logged);
+            return cookie.token;
+        } else {
+            return '';
+        }
+    }
+
+    getUserAdmin() {
         let logged = Cookies.get('user-logged');
         if (logged) {
             let cookie = JSON.parse(logged);
@@ -29,14 +39,15 @@ export default class ServiceBase {
         }
     }
 
-    getProduct() {
-        let storedProduct = Cookies.get('selected-product');
-        if (storedProduct) {
-            return JSON.parse(storedProduct);
+    getUserClient() {
+        let logged = Cookies.get('user-logged');
+        if (logged) {
+            let cookie = JSON.parse(logged);
+            return cookie;
         } else {
             return {};
         }
-    }    
+    }
 
     async get(path) {
         try {

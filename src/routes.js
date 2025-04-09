@@ -14,6 +14,8 @@ import ProductPreview from "./pages/admin/product/productPreview/index.js";
 import Cart from "./pages/client/cart/index.js";
 import Shop from "./pages/client/shop/index.js";
 import ClientPreview from "./pages/client/preview/index.js";
+import ClientLogin from "./pages/client/auth/login/index.js";
+import ClientRegister from "./pages/client/auth/register/index.js";
 
 export default function RoutesProject() {
     return (
@@ -40,6 +42,8 @@ export default function RoutesProject() {
                 <Route path="/" element={<Shop />} />
                 <Route path="/product/ClientPreview" element={<ClientPreview />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/login" element={<ClientLogin />} />
+                <Route path="/register" element={<ClientRegister />} />
             </Routes>
         </BrowserRouter>
     )
