@@ -1,44 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { toast } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import AuthBox from "../../../../components/auth-box";
-import Button from "../../../../components/button";
-import Input from "../../../../components/input";
-import Cookies from 'js-cookie';
+import AuthBox from "../../../../components/auth-box/index.js";
+import Button from "../../../../components/button/index.js";
+import Input from "../../../../components/input/index.js";
 
-import { Container } from "./styled";
+import { Container } from "./styled.js";
 
-import userAdminApi from "../../../../service/admin/userAdmin";
-const api = new userAdminApi();
+import clientApi from "../../../../service/client/client.js";
+const api = new clientApi();
 
-export default function Update() {
-    const [id, setId] = useState(0);
+export default function ClientRegister() {
     const [name, setName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [cpf, setCpf] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [userGroup, setUserGroup] = useState("");
-    const [status, setStatus] = useState("");
+    const [birthDate, setBirthDate] = useState("");
+    const [gender, setGender] = useState("");
 
-    const location = useLocation();
+    const options = ["MASCULINO", "FEMININO", "OUTRO", "NAO_INFORMADO"];
+
     const navigation = useNavigate();
 
-    const user = api.getUserAdmin();
-    const options = ["ADMIN", "ESTOQUISTA"];
-
     const isFormCompleted = Object.values(
-        [email, password, confirmPassword, name, cpf, userGroup]
-    ).every((value) => value?.trim() !== "");
+        [email, password, confirmPassword, name, lastName, cpf, birthDate, gender]
+    ).every((value) => value.trim() !== "");
 
     const isInvalidEmail = () => {
         const emailRegex = /^[a-zA-Z0-9.+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
         return !emailRegex.test(email);
     }
 
-    const update = async () => {
+    const isValidBirthDate = (dateString) => {
+        const birthDate = new Date(dateString);
+        const today = new Date();
+        
+        birthDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+    
+        return birthDate < today;
+    };     
+
+    const register = async () => {
         if (!isFormCompleted) {
             toast.warn("Preencha todos os campos !")
             return;
@@ -53,61 +60,36 @@ export default function Update() {
             toast.warn("O email deve ser bem formatado");
             return;
         }
-        
-        let response = await api.update(user.id, {
-            id,
-            name,
-            cpf,
-            email,
-            password,
-            userGroup,
-            status
-        })
 
-        if (response.status !== 204) {
-            toast.error(response.error);
+        if (!isValidBirthDate(birthDate)) {
+            toast.warn("A data de nascimento deve ser anterior à data atual.");
+            return;
+        }
+
+        let response = await api.register({ email, password, confirmPassword, name, lastName, cpf, birthDate, gender });
+        
+        if(response.status !== 200){
+            toast.warn(response.error);
             console.log(response.message);
             return;
         }
 
-        if (user.id === response.data.id) {
-            Cookies.set("user-logged-admin", JSON.stringify(response.data), { expires: 7 });   
-        }
+        toast.success("Registro inserido com sucesso!");
+        navigation("/login");
 
-        toast.success("Usuário alterado com sucesso!");
-        navigation("/admin/user/management");
-    }
-
-    const handleUserInformation = () => {
-        if (!location.state) {
-            toast.warn("Selecione um usuário antes de alterar!");
-            navigation("/admin/user/management");
-            return;
-        }
-
-        setId(location.state[0].id);
-        setName(location.state[0].name);
-        setEmail(location.state[0].email);
-        setCpf(location.state[0].cpf);
-        setUserGroup(location.state[0].userGroup);
-        setStatus(location.state[0].status);
     }
 
     const comeBack = () => {
-        navigation("/admin/user/management");
+        navigation("/");
     }
-
-    useEffect(() => {
-        handleUserInformation();
-    }, [])
 
     return (
         <Container>
             <Link to={"/"}>
                 <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
-            <AuthBox myWidth={40} myHeight={70}>
-                <h3> Alterando usuário </h3>
+            <AuthBox myWidth={40} myHeight={90} myBackgroundColor={"#4A4A4A"}>
+                <h3> Cadastre-se </h3>
                 <hr />
                 <div>
                     <Input
@@ -122,12 +104,23 @@ export default function Update() {
                     </Input>
 
                     <Input
+                        myGetter={lastName}
+                        mySetter={setLastName}
+                        myMargin={"1.5em 0em"}
+                        myHeight={7}
+                        myWidth={28}
+                        myPlaceHolder="João Silva"
+                    >
+                        Seu Sobrenome
+                    </Input>
+
+                    <Input
                         myGetter={cpf}
                         mySetter={setCpf}
                         myMargin={"1.5em 0em"}
                         myHeight={7}
                         myWidth={28}
-                        myPlaceHolder="999.999.999-99"
+                        myPlaceHolder="999.999.99-99"
                     >
                         Seu CPF
                     </Input>
@@ -139,9 +132,19 @@ export default function Update() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="email@email.com"
-                        myDisabled={true}
                     >
-                        Sua Email
+                        Seu Email
+                    </Input>
+
+                    <Input
+                        myGetter={birthDate}
+                        mySetter={setBirthDate}
+                        myMargin={"1.5em 0em"}
+                        myHeight={7}
+                        myWidth={28}
+                        myType="date"
+                    >
+                        Sua data de nascimento
                     </Input>
 
                     <Input
@@ -172,11 +175,11 @@ export default function Update() {
                         <label htmlFor="select">Escolha uma opção:</label>
                         <select
                             id="select"
-                            value={userGroup}
-                            onChange={(e) => setUserGroup(e.target.value)}
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
                         >
                             <option key={1} value={""}>
-                                    SELECIONE...
+                                SELECIONE...
                             </option>
                             {options.map((option, index) => (
                                 <option key={index} value={option}>
@@ -185,23 +188,23 @@ export default function Update() {
                             ))}
                         </select>
                     </div>
-
+                    
                     <div className="button-group">
                         <Button
                             myMargin={"1.5em 1em 1.5em 0em"}
                             myHeight={5}
                             myWidth={14}
-                            myBackgroundColor={"#007bff"}
-                            myMethod={update}
+                            myBackgroundColor={"#F3C220"}
+                            myMethod={register}
                             myColor={"#ffff"}
                         >
-                            Alterar
+                            Cadastrar
                         </Button>
                         <Button
                             myMargin={"1.5em 0em"}
                             myHeight={5}
                             myWidth={14}
-                            myBackgroundColor={"#007bff"}
+                            myBackgroundColor={"#F3C220"}
                             myMethod={comeBack}
                             myColor={"#ffff"}
                         >

@@ -211,7 +211,7 @@ export default function ProductUpdate() {
     }
 
     const verifyGroup = () => {
-        switch (apiUser.getUser().userGroup) {
+        switch (apiUser.getUserAdmin().userGroup) {
             case "ADMIN":
                 setDisableFields(false);
                 break;

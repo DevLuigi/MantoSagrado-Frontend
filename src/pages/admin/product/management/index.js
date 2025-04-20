@@ -59,7 +59,7 @@ export default function ProductManagementScreen() {
   }
 
   const handleRegister = () => {
-    if (apiUser.getUser().userGroup === "ESTOQUISTA") {
+    if (apiUser.getUserAdmin().userGroup === "ESTOQUISTA") {
       toast.warning("Apenas um admin pode inserir um produto!")
       return;
     }
@@ -82,7 +82,6 @@ export default function ProductManagementScreen() {
     const newStatus = currentStatus === 'ATIVADO' ? 'DESATIVADO' : 'ATIVADO';
 
     const confirmChange = window.confirm(`Tem certeza que deseja alterar o status do produto ${productId} para ${newStatus}?`);
-
     if (!confirmChange) {
       return;
     }
@@ -104,7 +103,7 @@ export default function ProductManagementScreen() {
   };
 
   const verifyGroup = () => {
-    switch (apiUser.getUser().userGroup) {
+    switch (apiUser.getUserAdmin().userGroup) {
       case "ADMIN":
         setDoNotDisplayStatus(false);
         setDoNotDisplayViewProduct(false);
