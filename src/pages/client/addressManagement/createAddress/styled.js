@@ -7,28 +7,33 @@ const Container = styled.div`
     align-items: center;
 
     background: rgb(40,40,40);
-    background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%); /* fundo escuro */
+    background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%);
 
-    color: #fffdf9; 
+    min-height: 100dvh;
+
+    color: #f3f3f3;
 
     hr {
         width: 90%;
         border: 1.5px solid #F3C220;
-    }    
+    }
 
     img {
         height: 8em;
         width: 10em;
     }
 
-    .button-group {
-        display: flex;
-        flex-direction: row;
+    select {
+        margin-left: 1em;
     }
+`;
 
-    label {
-        margin: 0em .5em 0em 0em;
-    }
-`
+const GroupButton = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-export { Container }
+    margin-top: 1em;
+`;
+
+export { Container, GroupButton }

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 
+import Cookies from 'js-cookie';
+
 import AuthBox from "../../../../components/auth-box/index.js";
 import Button from "../../../../components/button/index.js";
 import Input from "../../../../components/input/index.js";
@@ -75,8 +77,8 @@ export default function ClientRegister() {
         }
 
         toast.success("Registro inserido com sucesso!");
-        navigation("/login");
-
+        Cookies.set("user-registration", JSON.stringify(response.data), { expires: 1 });
+        navigation("/address/list");
     }
 
     const comeBack = () => {
@@ -88,7 +90,11 @@ export default function ClientRegister() {
             <Link to={"/"}>
                 <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
-            <AuthBox myWidth={40} myHeight={90} myBackgroundColor={"#4A4A4A"}>
+            <AuthBox 
+                myWidth={40} 
+                myHeight={90} 
+                myBackgroundColor={"#26232c"}
+            >
                 <h3> Cadastre-se </h3>
                 <hr />
                 <div>

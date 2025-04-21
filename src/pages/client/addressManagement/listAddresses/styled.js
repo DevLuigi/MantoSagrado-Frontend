@@ -9,8 +9,7 @@ const Container = styled.div`
     background: rgb(40,40,40);
     background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%);
 
-    height: 100dvh;
-    width: 100dvw;
+    min-height: 100dvh;
 
     color: #f3f3f3;
 
@@ -24,26 +23,42 @@ const Container = styled.div`
         width: 10em;
     }
 
-    .comeback {
-        width: 95%;
-        display: flex;
-        justify-content: flex-start;
-        margin-bottom: 1em;
+    .address-box {
+        width: 90%;
     }
 
-    .register-link {
+    .new-address {
         display: flex;
         flex-direction: row;
         align-items: center;
-        height: 1em;
+
+        width: fit-content;
+
+        color: #f3f3f3;
+        font-weight: 700;
+        cursor: pointer;
+
+        transition: .3s;
+
+        &:hover {
+            transition: .3s;
+            color:#F3C220;
+        }
     }
 
-    .register {
-        text-decoration: underline;
-        cursor: pointer;
-        color: #f3f3f3;
-        margin-left: .3em;
+    .address-list {
+        & > div {
+            margin: 1em 0em;
+        }
     }
 `;
 
-export { Container };
+const GroupButton = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-top: 1em;
+`;
+
+export { Container, GroupButton }

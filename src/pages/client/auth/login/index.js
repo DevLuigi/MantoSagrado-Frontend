@@ -64,7 +64,11 @@ export default function ClientLogin() {
             <Link to={"/"}>
                 <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
             </Link>
-            <AuthBox myWidth={40} myHeight={60} myBackgroundColor={"#4A4A4A"}>
+            <AuthBox 
+                myWidth={40} 
+                myHeight={60} 
+                myBackgroundColor={"#26232c"}
+            >
                 <h3> Acesse sua conta </h3>
                 <hr />
                 <div>
@@ -91,11 +95,16 @@ export default function ClientLogin() {
                         myHeight={6}
                         myWidth={29}
                         myBackgroundColor={"#F3C220"}
+                        myMargin={"0em 0em 1em 0em"}
                         myMethod={login}
                         myColor={"#ffff"}
                     >
                         Entrar
                     </Button>
+                    <div className="register-link">
+                        <p> Ainda não tem uma conta? </p>
+                        <a className="register" href="/register"> Cadastre-se </a>
+                    </div>
                 </div>
             </AuthBox>
         </Container>
