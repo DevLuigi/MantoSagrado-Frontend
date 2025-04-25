@@ -16,16 +16,21 @@ const api = new clientApi();
 
 export default function ListAddresses() {
     const [addresses, setAddresses] = useState([]);
+    const [isRegistering, setIsRegistering] = useState(true);
 
-    const userRegistration = JSON.parse(Cookies.get("user-registration"));
+    const userRegistration = Cookies.get("user-registration") ? JSON.parse(Cookies.get("user-registration")) : null;
+    const userLogged = Cookies.get("user-logged-client") ? JSON.parse(Cookies.get("user-logged-client")) : null;
+
     const navigation = useNavigate();
+
+    const userId = userRegistration?.id || userLogged?.id;
 
     const createAddress = () => {
         navigation("/address/create");
     }
 
     const listAllAddress = async () => {
-        const response = await api.listAllAddresses(userRegistration.id);
+        const response = await api.listAllAddresses(userId);
         if (response.status !== 200) {
             toast.error(response.error);
             console.log(response.message);
@@ -50,8 +55,8 @@ export default function ListAddresses() {
         if (!confirmUpdate) {
             return;
         }
-        
-        const response = await api.updateDefaultAddress(userRegistration.id, addressId);
+
+        const response = await api.updateDefaultAddress(userId, addressId);
         if (response.status !== 204) {
             toast.error(response.error);
             console.log(response.message);
@@ -60,7 +65,7 @@ export default function ListAddresses() {
 
         await listAllAddress();
         toast.success("Endereço padrão atualizado com sucesso!");
-    } 
+    }
 
     const finalizeRegistration = () => {
         const hasDefaultAddress = addresses.filter(address => address.defaultAddress === "DEFAULT" && address.type === "ENTREGA");
@@ -84,7 +89,7 @@ export default function ListAddresses() {
         if (!confirmCancel) {
             return;
         }
-        
+
         const response = await api.deleteClient(userRegistration.id);
         if (response.status !== 204) {
             toast.error(response.error);
@@ -98,14 +103,16 @@ export default function ListAddresses() {
 
     useEffect(() => {
         listAllAddress();
+
+        setIsRegistering(!userLogged);
     }, [])
 
-    return(
+    return (
         <Container>
             <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
-            <AuthBox 
-                myWidth={60} 
-                myHeight={60} 
+            <AuthBox
+                myWidth={60}
+                myHeight={60}
                 myBackgroundColor={"#26232c"}
             >
                 <h3> Lista de endereços </h3>
@@ -113,14 +120,14 @@ export default function ListAddresses() {
                 <div className="address-box">
                     <div className="new-address" onClick={createAddress}>
                         <MapPinPlusInside />
-                        <p> Adicionar um novo endereço </p>  
+                        <p> Adicionar um novo endereço </p>
                     </div>
                     <div className="address-list">
                         {
-                            addresses.map((address) => 
-                                <AddressCard 
+                            addresses.map((address) =>
+                                <AddressCard
                                     key={address.id}
-                                    address={address} 
+                                    address={address}
                                     myDefaultFunction={() => updateDefaultAddress(address.id, address.type, address.defaultAddress)}
                                 />
                             )
@@ -128,26 +135,43 @@ export default function ListAddresses() {
                     </div>
                 </div>
                 <GroupButton>
-                    <Button
-                        myHeight={6}
-                        myWidth={17.5}
-                        myBackgroundColor={"#F3C220"}
-                        myMargin={"0em 1em 1em 0em"}
-                        myMethod={finalizeRegistration}
-                        myColor={"#ffff"}
-                    >
-                        Finalizar Cadastro
-                    </Button>
-                    <Button
-                        myHeight={6}
-                        myWidth={17.5}
-                        myBackgroundColor={"#F3C220"}
-                        myMargin={"0em 0em 1em 0em"}
-                        myMethod={cancelRegistration}
-                        myColor={"#ffff"}
-                    >
-                        Cancelar
-                    </Button>
+                    {isRegistering ? (
+                        <>
+                            <Button
+                                myHeight={6}
+                                myWidth={17.5}
+                                myBackgroundColor={"#F3C220"}
+                                myMargin={"0em 1em 1em 0em"}
+                                myMethod={finalizeRegistration}
+                                myColor={"#ffff"}
+                            >
+                                Finalizar Cadastro
+                            </Button>
+                            <Button
+                                myHeight={6}
+                                myWidth={17.5}
+                                myBackgroundColor={"#F3C220"}
+                                myMargin={"0em 0em 1em 0em"}
+                                myMethod={cancelRegistration}
+                                myColor={"#ffff"}
+                            >
+                                Cancelar
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                myHeight={6}
+                                myWidth={17.5}
+                                myBackgroundColor={"#F3C220"}
+                                myMargin={"0em 1em 1em 0em"}
+                                myMethod={() => navigation("/profile")}
+                                myColor={"#ffff"}
+                            >
+                                Voltar ao Perfil
+                            </Button>
+                        </>
+                    )}
                 </GroupButton>
             </AuthBox>
         </Container>
