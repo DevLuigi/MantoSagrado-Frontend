@@ -23,7 +23,7 @@ export default function Header({ cart }) {
         setIsLogged(null);
 
         toast.success("Logout efetuado com sucesso");
-        navigate("/");
+        navigate("/login");
     };
 
     const handleCookie = () => {

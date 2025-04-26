@@ -38,9 +38,15 @@ export default function ClientLogin() {
             return;
         }
 
-        Cookies.set("user-logged-client", JSON.stringify(response.data), { expires: 7 });
         toast.success("Login efetuado com sucesso");
-        navigation("/");
+        Cookies.set("user-logged-client", JSON.stringify(response.data), { expires: 7 });
+        const isCartDone = Cookies.get("cartDone")?JSON.parse(Cookies.get("cartDone"))?.isDone:false;
+        if(isCartDone){
+            Cookies.remove("cartDone")
+            navigation("/cart")
+            return;
+        }
+         navigation("/");
     }
 
     const comeBack = () => {
