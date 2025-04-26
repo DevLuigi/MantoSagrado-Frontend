@@ -24,6 +24,8 @@ import CreateAddress from "./pages/client/addressManagement/createAddress/index.
 import ClientProfile from "./pages/client/profile/index.js";
 import ClientUpdate from "./pages/client/auth/update/index.js";
 
+import Payment from "./pages/client/cartCheckout/payment/index.js";
+
 export default function RoutesProject() {
     return (
         <BrowserRouter>
@@ -55,6 +57,7 @@ export default function RoutesProject() {
                 <Route path="/profile/update" element={<ClientUpdate />} />
                 <Route path="/address/list" element={<ListAddresses />}/>
                 <Route path="/address/create" element={<CreateAddress />}/>
+                <Route path="/cart/checkout/payment" element={<Payment />}/>
             </Routes>
         </BrowserRouter>
     )

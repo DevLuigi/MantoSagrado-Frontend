@@ -19,11 +19,13 @@ export default function Cart() {
   const [cart, setCart] = useState(() => {
     const savedCart = Cookies.get("cart");
     return savedCart ? JSON.parse(savedCart) : [];
+  
   });
   const [shippingCostOptions, setShippingCostOptions] = useState([]);
   const [selectedShippingCost, setSelectedShippingCost] = useState([]);
   const [cep, setCep] = useState("");
   const [total, setTotal] = useState(0);
+  
 
   const navigation = useNavigate();
 
@@ -57,6 +59,13 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
+    const userLogged = await api.getUserClient();
+      if(Object.keys(userLogged).length === 0){
+        toast.warn(" Deve ser logado para finalizar compra ")
+        Cookies.set("cartDone", JSON.stringify({"isDone":true}), { expires: 1 });
+        navigation("/login")
+        return;
+      }
       if (cart.length <= 0) {
         toast.warn("Carrinho vazio, selecione um produto antes de finalizar a compra");
         return;
