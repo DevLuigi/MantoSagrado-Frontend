@@ -11,11 +11,18 @@ import ProductManagementAdmin from "./pages/admin/product/management";
 import ProductRegisterAdmin from "./pages/admin/product/register";
 import ProductUpdateAdmin from "./pages/admin/product/update";
 import ProductPreview from "./pages/admin/product/productPreview/index.js";
+
 import Cart from "./pages/client/cart/index.js";
 import Shop from "./pages/client/shop/index.js";
+
 import ClientPreview from "./pages/client/preview/index.js";
 import ClientLogin from "./pages/client/auth/login/index.js";
 import ClientRegister from "./pages/client/auth/register/index.js";
+
+import ListAddresses from "./pages/client/addressManagement/listAddresses/index.js";
+import CreateAddress from "./pages/client/addressManagement/createAddress/index.js";
+import ClientProfile from "./pages/client/profile/index.js";
+import ClientUpdate from "./pages/client/auth/update/index.js";
 
 export default function RoutesProject() {
     return (
@@ -44,6 +51,10 @@ export default function RoutesProject() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<ClientLogin />} />
                 <Route path="/register" element={<ClientRegister />} />
+                <Route path="/profile" element={<ClientProfile />} />
+                <Route path="/profile/update" element={<ClientUpdate />} />
+                <Route path="/address/list" element={<ListAddresses />}/>
+                <Route path="/address/create" element={<CreateAddress />}/>
             </Routes>
         </BrowserRouter>
     )

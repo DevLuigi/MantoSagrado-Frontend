@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,7 +14,8 @@ import { Container } from "./styled.js";
 import clientApi from "../../../../service/client/client.js";
 const api = new clientApi();
 
-export default function ClientRegister() {
+export default function ClientUpdate() {
+    const [id, setId] = useState(0);
     const [name, setName] = useState("");
     const [lastName, setLastName] = useState("");
     const [cpf, setCpf] = useState("");
@@ -24,13 +25,14 @@ export default function ClientRegister() {
     const [birthDate, setBirthDate] = useState("");
     const [gender, setGender] = useState("");
 
+    const userData = JSON.parse(Cookies.get("user-logged-client"));
+
     const options = ["MASCULINO", "FEMININO", "OUTRO", "NAO_INFORMADO"];
 
     const navigation = useNavigate();
 
     const isFormCompleted = Object.values(
-        [email, password, confirmPassword, name, lastName, cpf, birthDate, gender]
-    ).every((value) => value.trim() !== "");
+        [email, password, confirmPassword, name, lastName, cpf, birthDate, gender]);
 
     const isInvalidEmail = () => {
         const emailRegex = /^[a-zA-Z0-9.+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
@@ -47,7 +49,7 @@ export default function ClientRegister() {
         return birthDate < today;
     };     
 
-    const register = async () => {
+    const update = async () => {
         if (!isFormCompleted) {
             toast.warn("Preencha todos os campos !")
             return;
@@ -68,22 +70,59 @@ export default function ClientRegister() {
             return;
         }
 
-        let response = await api.register({ email, password, confirmPassword, name, lastName, cpf, birthDate, gender });
-        
-        if(response.status !== 200){
+        let response = await api.update(userData.id, {
+            id,
+            email,
+            password,
+            name,
+            lastName,
+            cpf,
+            birthDate,
+            gender            
+        })
+
+        if(response.status !== 204){
             toast.warn(response.error);
             console.log(response.message);
             return;
         }
 
-        toast.success("Registro inserido com sucesso!");
-        Cookies.set("user-registration", JSON.stringify(response.data), { expires: 1 });
-        navigation("/address/list");
+        toast.success("Dados atualizados com sucesso!");
+        comeBack();
+    }
+
+    const handleUserInformation = async () => {
+        if (!userData) {
+            toast.warn("Faça login antes de usar o sistema!");
+            navigation("/login");
+            return;
+        }
+
+        try {
+            const user = await api.listById(userData.id);
+            console.log(user);
+    
+            setId(user.data.id);
+            setName(user.data.name);
+            setLastName(user.data.lastName);
+            setEmail(user.data.email);
+            setCpf(user.data.cpf);
+            setBirthDate(user.data.birthDate);
+            setGender(user.data.gender);
+
+        } catch (error) {
+            toast.warn("Erro ao carregar dados do cliente.");
+            console.error(error);
+        }
     }
 
     const comeBack = () => {
-        navigation("/");
+        navigation("/profile");
     }
+
+    useEffect(() => {
+        handleUserInformation();
+    }, []);
 
     return (
         <Container>
@@ -127,6 +166,7 @@ export default function ClientRegister() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="999.999.99-99"
+                        myDisabled={true}
                     >
                         Seu CPF
                     </Input>
@@ -138,6 +178,7 @@ export default function ClientRegister() {
                         myHeight={7}
                         myWidth={28}
                         myPlaceHolder="email@email.com"
+                        myDisabled={true}
                     >
                         Seu Email
                     </Input>
@@ -201,7 +242,7 @@ export default function ClientRegister() {
                             myHeight={5}
                             myWidth={14}
                             myBackgroundColor={"#F3C220"}
-                            myMethod={register}
+                            myMethod={update}
                             myColor={"#ffff"}
                         >
                             Cadastrar
