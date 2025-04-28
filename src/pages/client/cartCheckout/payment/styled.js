@@ -1,18 +1,20 @@
 import styled from "styled-components";
 
 const PagamentoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+  min-height: 100dvh;
+
   background: rgb(40, 40, 40);
   background: linear-gradient(rgb(39, 35, 49) 0%, imprgb(24, 23, 24) 100%);
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-  font-family: Arial, sans-serif;
-
-  min-height: 100dhv;
 `;
 
 const Titulo = styled.h2`
   font-size: 1.5rem;
+  color: #f3f3f3;
   margin-bottom: 1rem;
 `;
 
@@ -48,7 +50,7 @@ const Descricao = styled.span`
 `;
 
 const FormCartao = styled.form`
-  margin-top: 20px;
+  margin: 20px 0px;
   display: flex;
   flex-direction: column;
   gap: 15px;

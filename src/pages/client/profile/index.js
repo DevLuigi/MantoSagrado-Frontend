@@ -21,7 +21,7 @@ export default function ClientProfile() {
 
     return (
         <S.Container>
-            <div className="comeback">
+            <S.Comeback>
                 <Button
                     myHeight={6}
                     myWidth={8}
@@ -31,19 +31,33 @@ export default function ClientProfile() {
                 >
                     Voltar
                 </Button>
-            </div>
+            </S.Comeback>
 
-            <S.Logo src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
-            <S.Title>Meu Perfil</S.Title>
+            <S.Content>
+                <S.Logo src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image" />
+                <S.Title>Meu Perfil</S.Title>
 
-            <S.ButtonGroup>
-                <S.TransparentButton onClick={goToAddresses}>
-                    Lista de Endereços
-                </S.TransparentButton>
-                <S.TransparentButton onClick={goToUpdateProfile}>
-                    Atualizar Dados
-                </S.TransparentButton>
-            </S.ButtonGroup>
+                <S.ButtonGroup>
+                    <Button 
+                        myHeight={8}
+                        myWidth={15}
+                        myBackgroundColor={"#F3C220"}
+                        myColor={"#fffdf9"}
+                        myMethod={goToAddresses}
+                    >
+                        Lista de Endereços
+                    </Button>
+                    <Button 
+                        myHeight={8}
+                        myWidth={15}
+                        myBackgroundColor={"#F3C220"}
+                        myColor={"#fffdf9"}
+                        myMethod={goToUpdateProfile}
+                    >
+                        Atualizar Dados
+                    </Button>
+                </S.ButtonGroup>
+            </S.Content>
         </S.Container>
     );
 }

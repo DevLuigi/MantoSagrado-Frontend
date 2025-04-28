@@ -10,7 +10,7 @@ export default class ServiceBase {
     }
 
     getTokenClient() {
-        let logged = Cookies.get('user-logged');
+        let logged = Cookies.get('user-logged-client');
         if (logged) {
             let cookie = JSON.parse(logged);
             return cookie.token;
@@ -40,7 +40,7 @@ export default class ServiceBase {
     }
 
     getUserClient() {
-        let logged = Cookies.get('user-logged');
+        let logged = Cookies.get('user-logged-client');
         if (logged) {
             let cookie = JSON.parse(logged);
             return cookie;
