@@ -34,30 +34,39 @@ export default function RoutesProject() {
                 <Route path="/admin/login" element={<LoginAdmin />} />
                 <Route path="/admin/menu" element={<MenuAdmin />} />
 
-                {/* User */}
-                <Route path="/admin/user/management" element={<UserManagementAdmin />} />
-                <Route path="/admin/user/register" element={<UserRegisterAdmin />} />
-                <Route path="/admin/user/update" element={<UserUpdateAdmin />} />
+                    {/* User */}
+                    <Route path="/admin/user/management" element={<UserManagementAdmin />} />
+                    <Route path="/admin/user/register" element={<UserRegisterAdmin />} />
+                    <Route path="/admin/user/update" element={<UserUpdateAdmin />} />
 
-                {/* Product */}
-                <Route path="/admin/product/management" element={<ProductManagementAdmin />} />
-                <Route path="/admin/product/register" element={<ProductRegisterAdmin />} />
-                <Route path="/admin/product/update" element={<ProductUpdateAdmin />} />
-                <Route path="/admin/product/productPreview" element={<ProductPreview />} />
+                    {/* Product */}
+                    <Route path="/admin/product/management" element={<ProductManagementAdmin />} />
+                    <Route path="/admin/product/register" element={<ProductRegisterAdmin />} />
+                    <Route path="/admin/product/update" element={<ProductUpdateAdmin />} />
+                    <Route path="/admin/product/productPreview" element={<ProductPreview />} />
                 
                 {/* ========================================================================== */}
-
                 {/* Client routes */}
-                <Route path="/" element={<Shop />} />
-                <Route path="/product/ClientPreview" element={<ClientPreview />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/login" element={<ClientLogin />} />
-                <Route path="/register" element={<ClientRegister />} />
-                <Route path="/profile" element={<ClientProfile />} />
-                <Route path="/profile/update" element={<ClientUpdate />} />
-                <Route path="/address/list" element={<ListAddresses />}/>
-                <Route path="/address/create" element={<CreateAddress />}/>
-                <Route path="/cart/checkout/payment" element={<Payment />}/>
+
+                    {/* Auth */}
+                    <Route path="/login" element={<ClientLogin />} />
+                    <Route path="/register" element={<ClientRegister />} />
+
+                    {/* Others */}
+                    <Route path="/" element={<Shop />} />
+                    <Route path="/product/ClientPreview" element={<ClientPreview />} />
+
+                    {/* Profile */}
+                    <Route path="/profile" element={<ClientProfile />} />
+                    <Route path="/profile/update" element={<ClientUpdate />} />
+                
+                    {/* Address */}
+                    <Route path="/address/list" element={<ListAddresses />}/>
+                    <Route path="/address/create" element={<CreateAddress />}/>
+                
+                    {/* Cart */}
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/cart/checkout/payment" element={<Payment />}/>
             </Routes>
         </BrowserRouter>
     )

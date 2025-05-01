@@ -4,6 +4,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: ${(props) => props?.style?.myJustifyContent || ""};
 
     background-color: ${(props) => props?.style?.myBackgroundColor || "#f0f0f0"};
     box-shadow: 10px 10px 5px rgba(0,0,0,0.3);

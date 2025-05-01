@@ -60,25 +60,24 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     const userLogged = await api.getUserClient();
-      if(Object.keys(userLogged).length === 0){
-        toast.warn(" Deve ser logado para finalizar compra ")
-        Cookies.set("cartDone", JSON.stringify({"isDone":true}), { expires: 1 });
-        navigation("/login")
-        return;
-      }
-      if (cart.length <= 0) {
-        toast.warn("Carrinho vazio, selecione um produto antes de finalizar a compra");
-        return;
-      }
+    if(Object.keys(userLogged).length === 0){
+      toast.warn("Deve ser logado para finalizar compra");
+      Cookies.set("cartDone", JSON.stringify({"isDone":true}), { expires: 1 });
+      navigation("/login");
+      return;
+    }
 
-      if (selectedShippingCost.length <= 0) {
-        toast.warn("Selecione um frete antes de finalizar a compra");
-        return;
-      }
+    if (cart.length <= 0) {
+      toast.warn("Carrinho vazio, selecione um produto antes de finalizar a compra");
+      return;
+    }
 
-      Cookies.set("cart", JSON.stringify([]), { expires: 7 });
-      toast.success("Compra finalizada com sucesso!");
-      navigation("/");
+    if (selectedShippingCost.length <= 0) {
+      toast.warn("Selecione um frete antes de finalizar a compra");
+      return;
+    }
+
+    navigation("/cart/checkout/payment");
   }
 
   const handleShippingCost = async (cep) => {
@@ -182,7 +181,7 @@ export default function Cart() {
                       className="trash"
                       onClick={() => removeFromCart(item.id)}
                     />
-                    <p className="price">R${item.price * item.quantity}</p>
+                    <p className="price">R${item.price}</p>
                   </div>
                 </S.CartItem>
               ))}

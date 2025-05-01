@@ -38,15 +38,18 @@ export default function ClientLogin() {
             return;
         }
 
-        toast.success("Login efetuado com sucesso");
+        
         Cookies.set("user-logged-client", JSON.stringify(response.data), { expires: 7 });
-        const isCartDone = Cookies.get("cartDone")?JSON.parse(Cookies.get("cartDone"))?.isDone:false;
+        toast.success("Login efetuado com sucesso");
+
+        const isCartDone = Cookies.get("cartDone") ? JSON.parse(Cookies.get("cartDone"))?.isDone : false;
         if(isCartDone){
-            Cookies.remove("cartDone")
-            navigation("/cart")
+            Cookies.remove("cartDone");
+            navigation("/cart");
             return;
         }
-         navigation("/");
+
+        navigation("/");
     }
 
     const comeBack = () => {

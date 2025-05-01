@@ -9,10 +9,6 @@ export default function Header({ cart }) {
     const [isLogged, setIsLogged] = useState(null);
     const navigate = useNavigate();
 
-    const calculateTotalItems = () => {
-        return cart.reduce((total, item) => total + item.quantity, 0);
-    };
-
     const handleLogout = () => {
         const confirmLogout = window.confirm(`Tem certeza que deseja sair?`);
         if (!confirmLogout) {
@@ -66,7 +62,7 @@ export default function Header({ cart }) {
                             <ShoppingCart size={24} />
                         )}
                         {cart.length > 0 && (
-                            <S.ItemCount>{calculateTotalItems()}</S.ItemCount>
+                            <S.ItemCount>{cart.length}</S.ItemCount>
                         )}
                     </S.CartIcon>
                 </S.NavLinks>
