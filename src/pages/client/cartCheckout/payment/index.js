@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Cookies from "js-cookie";
+
 import AuthBox from "../../../../components/auth-box";
 import Button from "../../../../components/button";
 
@@ -17,6 +19,8 @@ export default function Payment() {
     vencimento: "",
     parcelas: "",
   });
+
+  const navigation = useNavigate();
 
   const metodos = [
     { id: "PIX", titulo: "PIX", descricao: "" },
@@ -65,6 +69,10 @@ export default function Payment() {
     if (validar() && metodoSelecionado === "CARTAO") {
       toast.success("Pagamento enviado com sucesso!");
     }
+
+    Cookies.set("payment-method", JSON.stringify({ "method": metodoSelecionado, "info": form }));
+    
+    navigation("/cart/checkout/order-review");
   };
 
   return (

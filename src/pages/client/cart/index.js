@@ -77,7 +77,10 @@ export default function Cart() {
       return;
     }
 
-    navigation("/cart/checkout/payment");
+    const shippingCost = shippingCostOptions.filter(option => option.id === selectedShippingCost);
+    Cookies.set("shipping-cost", JSON.stringify(shippingCost), { expires: 1 });
+    
+    navigation("/cart/checkout/address");
   }
 
   const handleShippingCost = async (cep) => {

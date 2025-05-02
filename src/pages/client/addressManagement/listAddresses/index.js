@@ -21,6 +21,7 @@ export default function ListAddresses() {
     const userRegistration = Cookies.get("user-registration") ? JSON.parse(Cookies.get("user-registration")) : null;
     const userLogged = Cookies.get("user-logged-client") ? JSON.parse(Cookies.get("user-logged-client")) : null;
 
+
     const navigation = useNavigate();
 
     const userId = userRegistration?.id || userLogged?.id;
@@ -135,43 +136,45 @@ export default function ListAddresses() {
                     </div>
                 </div>
                 <GroupButton>
-                    {isRegistering ? (
-                        <>
-                            <Button
-                                myHeight={6}
-                                myWidth={17.5}
-                                myBackgroundColor={"#F3C220"}
-                                myMargin={"0em 1em 1em 0em"}
-                                myMethod={finalizeRegistration}
-                                myColor={"#ffff"}
-                            >
-                                Finalizar Cadastro
-                            </Button>
-                            <Button
-                                myHeight={6}
-                                myWidth={17.5}
-                                myBackgroundColor={"#F3C220"}
-                                myMargin={"0em 0em 1em 0em"}
-                                myMethod={cancelRegistration}
-                                myColor={"#ffff"}
-                            >
-                                Cancelar
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Button
-                                myHeight={6}
-                                myWidth={17.5}
-                                myBackgroundColor={"#F3C220"}
-                                myMargin={"0em 1em 1em 0em"}
-                                myMethod={() => navigation("/profile")}
-                                myColor={"#ffff"}
-                            >
-                                Voltar ao Perfil
-                            </Button>
-                        </>
-                    )}
+                        {
+                            isRegistering ? (
+                            <>
+                                <Button
+                                    myHeight={6}
+                                    myWidth={17.5}
+                                    myBackgroundColor={"#F3C220"}
+                                    myMargin={"0em 1em 1em 0em"}
+                                    myMethod={finalizeRegistration}
+                                    myColor={"#ffff"}
+                                >
+                                    Finalizar Cadastro
+                                </Button>
+                                <Button
+                                    myHeight={6}
+                                    myWidth={17.5}
+                                    myBackgroundColor={"#F3C220"}
+                                    myMargin={"0em 0em 1em 0em"}
+                                    myMethod={cancelRegistration}
+                                    myColor={"#ffff"}
+                                >
+                                    Cancelar
+                                </Button>
+                            </>
+                             ) : (
+                            <>
+                                <Button
+                                    myHeight={6}
+                                    myWidth={17.5}
+                                    myBackgroundColor={"#F3C220"}
+                                    myMargin={"0em 1em 1em 0em"}
+                                    myMethod={() => navigation("/profile")}
+                                    myColor={"#ffff"}
+                                >
+                                    Voltar ao Perfil
+                                </Button>
+                            </>
+                        )
+                    }
                 </GroupButton>
             </AuthBox>
         </Container>
