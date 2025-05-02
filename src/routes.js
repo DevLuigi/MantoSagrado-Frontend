@@ -43,7 +43,7 @@ export default function RoutesProject() {
                     <Route path="/admin/product/management" element={<ProductManagementAdmin />} />
                     <Route path="/admin/product/register" element={<ProductRegisterAdmin />} />
                     <Route path="/admin/product/update" element={<ProductUpdateAdmin />} />
-                    <Route path="/admin/product/productPreview" element={<ProductPreview />} />
+                    <Route path="/admin/product/product-preview" element={<ProductPreview />} />
                 
                 {/* ========================================================================== */}
                 {/* Client routes */}
@@ -54,7 +54,7 @@ export default function RoutesProject() {
 
                     {/* Others */}
                     <Route path="/" element={<Shop />} />
-                    <Route path="/product/ClientPreview" element={<ClientPreview />} />
+                    <Route path="/product/client-preview" element={<ClientPreview />} />
 
                     {/* Profile */}
                     <Route path="/profile" element={<ClientProfile />} />
@@ -66,6 +66,7 @@ export default function RoutesProject() {
                 
                     {/* Cart */}
                     <Route path="/cart" element={<Cart />} />
+                    
                     <Route path="/cart/checkout/payment" element={<Payment />}/>
             </Routes>
         </BrowserRouter>

@@ -67,7 +67,7 @@ export default function CreateAddress() {
         }
 
         toast.success("Endereço inserido com sucesso!");
-        navigation("/address/list");
+        navigation(-1);
     }
 
     const seachCep = async (cep) => {
@@ -100,7 +100,7 @@ export default function CreateAddress() {
     }
 
     const comeBack = () => {
-        navigation("/address/list");
+        navigation(-1);
     }
 
     return (

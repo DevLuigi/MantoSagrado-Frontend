@@ -75,7 +75,7 @@ export default function ProductManagementScreen() {
 
   const viewProductDetails = (productId) => {
     const product = products.find(product => product.id === productId);
-    navigation("/admin/product/productPreview", { state: product });
+    navigation("/admin/product/product-preview", { state: product });
   };
 
   const handleToggleStatus = async (productId, currentStatus) => {
