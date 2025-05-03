@@ -15,6 +15,10 @@ export default function ClientProfile() {
         navigation("/profile/update");
     };
 
+    const goToMyOrders = () => {
+        navigation("/profile/my-orders");
+    };
+
     const comeback = () => {
         navigation("/");
     };
@@ -55,6 +59,15 @@ export default function ClientProfile() {
                         myMethod={goToUpdateProfile}
                     >
                         Atualizar Dados
+                    </Button>
+                    <Button 
+                        myHeight={8}
+                        myWidth={15}
+                        myBackgroundColor={"#F3C220"}
+                        myColor={"#fffdf9"}
+                        myMethod={goToMyOrders}
+                    >
+                        Meus pedidos
                     </Button>
                 </S.ButtonGroup>
             </S.Content>

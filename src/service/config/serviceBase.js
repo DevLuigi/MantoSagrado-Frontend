@@ -56,7 +56,7 @@ export default class ServiceBase {
         } catch (e) {
             return this.handleError(e);
         }
-    }
+    }    
 
     async post(path, body) {
         try {
