@@ -25,6 +25,7 @@ import ClientProfile from "./pages/client/profile/index.js";
 import ClientUpdate from "./pages/client/auth/update/index.js";
 
 import Payment from "./pages/client/cartCheckout/payment/index.js";
+import MyOrders from "./pages/client/orderManagement/listMyOrders/index.js";
 
 export default function RoutesProject() {
     return (
@@ -59,6 +60,7 @@ export default function RoutesProject() {
                     {/* Profile */}
                     <Route path="/profile" element={<ClientProfile />} />
                     <Route path="/profile/update" element={<ClientUpdate />} />
+                    <Route path="/profile/my-orders" element={<MyOrders />} />
                 
                     {/* Address */}
                     <Route path="/address/list" element={<ListAddresses />}/>
