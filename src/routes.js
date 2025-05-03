@@ -23,6 +23,7 @@ import ListAddresses from "./pages/client/addressManagement/listAddresses/index.
 import CreateAddress from "./pages/client/addressManagement/createAddress/index.js";
 import ClientProfile from "./pages/client/profile/index.js";
 import ClientUpdate from "./pages/client/auth/update/index.js";
+import ViewOrder from "./pages/client/cartCheckout/viewOrder/index.js";
 
 import Payment from "./pages/client/cartCheckout/payment/index.js";
 
@@ -68,6 +69,8 @@ export default function RoutesProject() {
                     <Route path="/cart" element={<Cart />} />
                     
                     <Route path="/cart/checkout/payment" element={<Payment />}/>
+
+                    <Route path="/client/cartCheckout/view-order" element={<ViewOrder />}/>
             </Routes>
         </BrowserRouter>
     )
