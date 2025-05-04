@@ -66,8 +66,8 @@ export default function RoutesProject() {
                     <Route path="/profile/orders" element={<ClientOrders />} />
                 
                     {/* Address */}
-                    <Route path="/address/list" element={<ListAddresses />}/>
-                    <Route path="/address/create" element={<CreateAddress />}/>
+                    <Route path="/address/list" element={<ListAddresses />} />
+                    <Route path="/address/create" element={<CreateAddress />} />
                 
                     {/* Cart */}
                     <Route path="/cart" element={<Cart />} />

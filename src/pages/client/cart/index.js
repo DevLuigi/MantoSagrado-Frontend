@@ -236,7 +236,7 @@ export default function Cart() {
                 myColor={"white"}
                 myMethod={handleCheckout}
               >
-                Finalizar Compra
+                Continuar Compra
               </Button>
             </S.CartContainer>
           </section>
