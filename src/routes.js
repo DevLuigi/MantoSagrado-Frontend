@@ -19,12 +19,15 @@ import ClientPreview from "./pages/client/preview/index.js";
 import ClientLogin from "./pages/client/auth/login/index.js";
 import ClientRegister from "./pages/client/auth/register/index.js";
 
-import ListAddresses from "./pages/client/addressManagement/listAddresses/index.js";
-import CreateAddress from "./pages/client/addressManagement/createAddress/index.js";
 import ClientProfile from "./pages/client/profile/index.js";
 import ClientUpdate from "./pages/client/auth/update/index.js";
-import ViewOrder from "./pages/client/cartCheckout/viewOrder/index.js";
+import ClientOrders from "./pages/client/orderManagement/listMyOrders/index.js";
 
+import ListAddresses from "./pages/client/addressManagement/listAddresses/index.js";
+import CreateAddress from "./pages/client/addressManagement/createAddress/index.js";
+
+import ViewOrder from "./pages/client/cartCheckout/viewOrder/index.js";
+import ListAddressesCart from "./pages/client/cartCheckout/address/index.js";
 import Payment from "./pages/client/cartCheckout/payment/index.js";
 
 export default function RoutesProject() {
@@ -60,6 +63,7 @@ export default function RoutesProject() {
                     {/* Profile */}
                     <Route path="/profile" element={<ClientProfile />} />
                     <Route path="/profile/update" element={<ClientUpdate />} />
+                    <Route path="/profile/orders" element={<ClientOrders />} />
                 
                     {/* Address */}
                     <Route path="/address/list" element={<ListAddresses />}/>
@@ -67,10 +71,9 @@ export default function RoutesProject() {
                 
                     {/* Cart */}
                     <Route path="/cart" element={<Cart />} />
-                    
-                    <Route path="/cart/checkout/payment" element={<Payment />}/>
-
-                    <Route path="/client/cartCheckout/view-order" element={<ViewOrder />}/>
+                    <Route path="/cart/checkout/address" element={<ListAddressesCart />} />
+                    <Route path="/cart/checkout/payment" element={<Payment />} />
+                    <Route path="/cart/checkout/view-order" element={<ViewOrder />}/>
             </Routes>
         </BrowserRouter>
     )

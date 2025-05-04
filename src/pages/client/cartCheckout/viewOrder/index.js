@@ -1,23 +1,68 @@
-
-import * as S from "./styled";
-import AuthBox from "../../../../components/auth-box";
-import Button from "../../../../components/button";
-import { Comeback } from "../../profile/styled";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import * as S from "./styled";
+
+import AuthBox from "../../../../components/auth-box";
+import Button from "../../../../components/button";
+
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+
 export default function ViewOrder() {
+    const [total, setTotal] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [installmentAmount, setInstallmentAmount] = useState(0);
+
+    const products = JSON.parse(Cookies.get("cart"));
+    const shippingCost = JSON.parse(Cookies.get("shipping-cost"))[0];
+    const deliveryAddress = JSON.parse(Cookies.get("delivery-address"));
+    const payment = {...JSON.parse(Cookies.get("payment-method"))};
+
     const navigation = useNavigate();
+    
     const completePurchase = () => {
+        // CÓDIGO PARA GERAR PEDIDOS E ITENS
+
+        Cookies.remove('cart');
+        Cookies.remove('shipping-cost');
+        Cookies.remove('delivery-address');
+        Cookies.remove('payment-method');
         
+        toast.success('Venda gerada com sucesso');
+        navigation('/');
     }
+
+    const calcTotal = () => {
+        const totalProducts = products.reduce((total, product) => {
+            return total + Number(product.price) * Number(product.quantity);
+        }, 0);
+        setTotalProducts(totalProducts);
+        
+        const shippingPrice = Math.round(Number(shippingCost.price) * 100) / 100;
+        setTotal(totalProducts + shippingPrice);
+
+        const installmentAmount = Math.round((totalProducts + shippingPrice) / Number(payment.info.parcelas) * 100) / 100; 
+        setInstallmentAmount(installmentAmount);
+    } 
+
     const comeBack = () => {
-        navigation(-1);
+        const confirmCancel = window.confirm(`Tem certeza que deseja voltar?`);
+        if (!confirmCancel) {
+            return;
+        }
+
+        navigation('/cart/checkout/payment');
     }
+
+    useEffect(() => {
+        calcTotal();
+    }, [])
 
     return (
         <S.Container>
             <AuthBox
-                myWidth={25}
+                myWidth={50}
                 myHeight={60}
                 myBackgroundColor={"#26232c"}>
                 <S.Section>
@@ -32,68 +77,71 @@ export default function ViewOrder() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Camiseta Preta</td>
-                                <td>R$ 49,90</td>
-                                <td>2</td>
-                                <td>R$ 99,80</td>
-                            </tr>
-                            <tr>
-                                <td>Tênis Esportivo</td>
-                                <td>R$ 199,00</td>
-                                <td>1</td>
-                                <td>R$ 199,00</td>
-                            </tr>
-                            <tr>
-                                <td>chuteira</td>
-                                <td>R$ 197,99</td>
-                                <td>3</td>
-                                <td>R$ 593,97</td>
-                            </tr>
+                            {
+                                products.map(product => (
+                                    <tr>
+                                        <td> {product.name} </td>
+                                        <td>R${product.price}</td>
+                                        <td>{product.quantity}</td>
+                                        <td>R${product.price * product.quantity}</td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </S.Table>
                 </S.Section>
                 <S.TextGroup>
                     <S.Section>
                         <S.Title>Frete</S.Title>
-                        <S.InfoLine><strong>Tipo:</strong> Sedex</S.InfoLine>
-                        <S.InfoLine><strong>Valor:</strong> R$ 20,00</S.InfoLine>
-                    </S.Section>
-
-                    <S.Section>
-                        <S.Title>Endereço de Entrega</S.Title>
-                        <S.InfoLine>João da Silva</S.InfoLine>
-                        <S.InfoLine>Rua das Flores, 123 – Centro</S.InfoLine>
-                        <S.InfoLine>São Paulo – SP – 01000-000</S.InfoLine>
+                        <S.InfoLine><strong>Tipo: </strong>{shippingCost.name}</S.InfoLine>
+                        <S.InfoLine><strong>Valor: </strong>R${shippingCost.price}</S.InfoLine>
                     </S.Section>
 
                     <S.Section>
                         <S.Title>Forma de Pagamento</S.Title>
-                        <S.InfoLine>Cartão de Crédito - Visa (final 1234)</S.InfoLine>
-                        <S.InfoLine>Parcelado em 3x de R$ 121,60</S.InfoLine>
+                        <S.InfoLine>
+                            {payment.method.titulo} 
+                            {
+                                payment.method.id === 'CARTAO' 
+                                    ? ' (Final ' + payment.info.numeroCartao.slice(-3) + ')'
+                                    : ''
+                            }
+                        </S.InfoLine>
+                        <S.InfoLine>
+                            {
+                                payment.method.id === 'CARTAO' 
+                                    ? 'Parcelado em ' + payment.info.parcelas + 'x de R$'+ installmentAmount
+                                    : ''
+                            }
+                        </S.InfoLine>
                     </S.Section>
 
                     <S.Section>
-                        <S.Title>Total Geral</S.Title>
-                        <S.InfoLine>Produtos: R$ 343,80</S.InfoLine>
-                        <S.InfoLine>Frete: R$ 20,00</S.InfoLine>
-                        <S.Total>Total: R$ 363,80</S.Total>
+                        <S.Title>Endereço: {deliveryAddress.identification}</S.Title>
+                        <S.InfoLine>{deliveryAddress.neighborhood}</S.InfoLine>
+                        <S.InfoLine>{deliveryAddress.streetAddress}, {deliveryAddress.number} – {deliveryAddress.complement}</S.InfoLine>
+                        <S.InfoLine>{deliveryAddress.city} – {deliveryAddress.uf} – {deliveryAddress.cep}</S.InfoLine>
+                    </S.Section>
+
+                    <S.Section>
+                        <S.Title>Valores totais</S.Title>
+                        <S.InfoLine>Produtos: R$ {totalProducts}</S.InfoLine>
+                        <S.InfoLine>Frete: R$ {shippingCost.price}</S.InfoLine>
+                        <S.InfoLine>Geral: R$ {total}</S.InfoLine>
                     </S.Section>
                 </S.TextGroup>
 
-
-
                 <S.ButtonsContainer>
                     <Button
-                        myHeight={4}
-                        myWidth={10}
+                        myHeight={6}
+                        myWidth={12}
                         myMargin={"0em 0em 2em 0em"}
                         myBackgroundColor={"#F3C220"}
                         myColor={"white"}
-                        myMethod={Comeback} >Voltar</Button>
+                        myMethod={comeBack} >Voltar</Button>
                     <Button
-                        myHeight={4}
-                        myWidth={10}
+                        myHeight={6}
+                        myWidth={12}
                         myMargin={"0em 0em 2em 0em"}
                         myBackgroundColor={"#F3C220"}
                         myColor={"white"}

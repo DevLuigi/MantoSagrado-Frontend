@@ -2,17 +2,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    background: rgb(40,40,40);
-    background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%);
+  background: rgb(40,40,40);
+  background: linear-gradient(rgb(39, 35, 49) 0%, rgb(24, 23, 24) 100%);
 
-    min-height: 100dvh;
+  min-height: 100dvh;
 
-    color: #f3f3f3;
+  color: #f3f3f3;
 `;
 
 export const Section = styled.div`
@@ -47,7 +47,6 @@ export const Total = styled.p`
 export const ButtonsContainer = styled.div`
   display: flex;
   gap: 1rem;
-  justify-content: flex-end;
 `;
 
 export const TextGroup = styled.div`

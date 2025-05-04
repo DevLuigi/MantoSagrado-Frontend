@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 
 const PagamentoContainer = styled.div`
@@ -19,8 +20,8 @@ const Titulo = styled.h2`
 `;
 
 const Metodo = styled.div`
-  border: 2px solid ${({ selecionado }) => (selecionado ? "#ff6600" : "#ccc")};
-  background-color: ${({ selecionado }) => (selecionado ? "#fff7f0" : "#fff")};
+  border: 2px solid ${({ selecionado }) => (selecionado ? "#F3C220" : "#ccc")};
+  background-color: #f3f3f3;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -31,7 +32,7 @@ const Metodo = styled.div`
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: #ff6600;
+    border-color: #F3C220;
   }
 `;
 
@@ -70,23 +71,14 @@ const Select = styled.select`
   border-radius: 6px;
 `;
 
+const GroupButton = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-const Botao = styled.button`
-  margin-top: 20px;
-  padding: 12px;
-  font-size: 1rem;
-  background-color: #ff6600;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: #e65c00;
-  }
+    margin-top: 1em;
 `;
+
 
 export {
   PagamentoContainer,
@@ -98,5 +90,5 @@ export {
   FormCartao,
   Input,
   Select,
-  Botao
+  GroupButton
 };

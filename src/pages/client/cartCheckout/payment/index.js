@@ -11,7 +11,13 @@ import * as S from "./styled";
 import { toast } from "react-toastify";
 
 export default function Payment() {
-  const [metodoSelecionado, setMetodoSelecionado] = useState("PIX");
+  const metodos = [
+    { id: "PIX", titulo: "Pix", descricao: "" },
+    { id: "BOLETO", titulo: "Boleto bancário", descricao: "" },
+    { id: "CARTAO", titulo: "Cartão de crédito", descricao: "" },
+  ];
+
+  const [metodoSelecionado, setMetodoSelecionado] = useState(metodos[0]);
   const [form, setForm] = useState({
     numeroCartao: "",
     nomeCompleto: "",
@@ -22,12 +28,6 @@ export default function Payment() {
 
   const navigation = useNavigate();
 
-  const metodos = [
-    { id: "PIX", titulo: "PIX", descricao: "" },
-    { id: "BOLETO", titulo: "BOLETO BANCÁRIO", descricao: "" },
-    { id: "CARTAO", titulo: "CARTÃO DE CRÉDITO", descricao: "" },
-  ];
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -35,45 +35,48 @@ export default function Payment() {
   const validar = () => {
     if (!form.numeroCartao) {
       toast.warn("Número do cartão obrigatório");
-      return;
+      return false;
     }
 
     if (!form.nomeCompleto) {
       toast.warn("Nome completo obrigatório");
-      return;
+      return false;
     }
 
     if (!form.codigoSeguranca) {
       toast.warn("Código de segurança obrigatório");
-      return;
+      return false;
     }
 
     if (!form.vencimento) {
       toast.warn("Data de vencimento obrigatória");
-      return;
+      return false;
     }
     if (!form.parcelas) {
       toast.warn("Selecione a quantidade de parcelas");
-      return;
+      return false;
     }
 
     return true;
   };
 
-  const handleSubmit = () => {
-    if (metodoSelecionado.trim() !== "" && metodoSelecionado!== "CARTAO"){
-      toast.success("Pagamento enviado com sucesso!");
-      return;
-    }
-      
-    if (validar() && metodoSelecionado === "CARTAO") {
-      toast.success("Pagamento enviado com sucesso!");
+  const nextStage = () => {
+    if (metodoSelecionado.id?.trim() === "" && metodoSelecionado.id !== "CARTAO") return;
+    if (metodoSelecionado.id === "CARTAO" && !validar()) return; 
+
+    toast.success("Pagamento enviado com sucesso!");
+    Cookies.set("payment-method", JSON.stringify({ "method": metodoSelecionado, "info": form }));
+    navigation("/cart/checkout/view-order");
+  };
+
+  const comeBack = async () => {
+    const confirmCancel = window.confirm(`Tem certeza que deseja voltar?`);
+    if (!confirmCancel) {
+        return;
     }
 
-    Cookies.set("payment-method", JSON.stringify({ "method": metodoSelecionado, "info": form }));
-    
-    navigation("/cart/checkout/order-review");
-  };
+    navigation('/cart/checkout/address');
+  }
 
   return (
     <S.PagamentoContainer>
@@ -89,8 +92,8 @@ export default function Payment() {
           {metodos.map((metodo) => (
             <S.Metodo
               key={metodo.id}
-              selecionado={metodoSelecionado === metodo.id}
-              onClick={() => setMetodoSelecionado(metodo.id)}
+              selecionado={metodoSelecionado.id === metodo.id}
+              onClick={() => setMetodoSelecionado(metodo)}
             >
               <S.Texto>
                 <S.TituloMetodo>{metodo.titulo}</S.TituloMetodo>
@@ -101,8 +104,8 @@ export default function Payment() {
             </S.Metodo>
           ))}
 
-          {metodoSelecionado === "CARTAO" && (
-            <S.FormCartao onSubmit={handleSubmit}>
+          {metodoSelecionado.id === "CARTAO" && (
+            <S.FormCartao onSubmit={nextStage}>
               <div>
                 <S.Input
                   type="text"
@@ -153,23 +156,35 @@ export default function Payment() {
                   <option value="1">1x Sem Juros</option>
                   <option value="2">2x Sem Juros</option>
                   <option value="3">3x Sem Juros</option>
-                  <option value="6">6x Com Juros</option>
-                  <option value="12">12x Com Juros</option>
+                  <option value="6">6x Sem Juros</option>
+                  <option value="12">12x Sem Juros</option>
                 </S.Select>
               </div>
             </S.FormCartao>
           )}
         </div>
-        <Button 
-          myHeight={6}
-          myWidth={20}
-          myMargin={"0em 0em 2em 0em"}
-          myBackgroundColor={"#F3C220"}
-          myColor={"white"}
-          myMethod={handleSubmit}
-        >
-          Finalizar Pagamento
-        </Button>
+        <S.GroupButton>
+          <Button 
+            myHeight={6}
+            myWidth={17.5}
+            myMargin={"0em 1em 1em 0em"}
+            myBackgroundColor={"#F3C220"}
+            myColor={"white"}
+            myMethod={comeBack}
+          >
+            Voltar
+          </Button>
+          <Button 
+            myHeight={6}
+            myWidth={17.5}
+            myMargin={"0em 0em 1em 0em"}
+            myBackgroundColor={"#F3C220"}
+            myColor={"white"}
+            myMethod={nextStage}
+          >
+            Avançar
+          </Button>
+        </S.GroupButton>
       </AuthBox>
     </S.PagamentoContainer>
   );
