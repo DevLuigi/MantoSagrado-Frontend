@@ -9,6 +9,10 @@ export default class orderApi extends ServiceBase {
         return await super.post("/list-all-by-client", body);
     }
 
+    async listByIdAndClient(orderId, clientId) {
+        return await super.post(`/${orderId}/client/${clientId}`);
+    }
+
     async register(body) {
         return await super.post('', body);
     }

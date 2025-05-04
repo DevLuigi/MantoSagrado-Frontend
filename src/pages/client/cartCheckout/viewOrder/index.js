@@ -8,28 +8,94 @@ import Button from "../../../../components/button";
 
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import orderApi from "../../../../service/client/order";
+import clientApi from "../../../../service/client/client";
+
+const api = new orderApi();
+const userApi = new clientApi();
 
 export default function ViewOrder() {
     const [total, setTotal] = useState(0);
     const [totalProducts, setTotalProducts] = useState(0);
     const [installmentAmount, setInstallmentAmount] = useState(0);
 
+    const userLogged = Cookies.get("user-logged-client") ? JSON.parse(Cookies.get("user-logged-client")) : null;
     const products = JSON.parse(Cookies.get("cart"));
     const shippingCost = JSON.parse(Cookies.get("shipping-cost"))[0];
     const deliveryAddress = JSON.parse(Cookies.get("delivery-address"));
     const payment = {...JSON.parse(Cookies.get("payment-method"))};
 
     const navigation = useNavigate();
-    
-    const completePurchase = () => {
-        // CÓDIGO PARA GERAR PEDIDOS E ITENS
 
+    const verifyCookies = () => {
+        if (Object.keys(userLogged).length === 0){
+            toast.error("Você não está logado. Faça login para continuar.");
+            navigation("/login");
+            return false;
+        }
+
+        if (Object.keys(products).length === 0){
+            toast.error("Carrinho vazio. Adicione produtos ao carrinho.");
+            navigation("/cart");
+            return false;
+        }
+
+        if (Object.keys(shippingCost).length === 0){
+            toast.error("Selecione o tipo de frete.");
+            navigation("/cart");
+            return false;
+        }
+
+        if (Object.keys(deliveryAddress).length === 0){
+            toast.error("Selecione o endereço de entrega.");
+            navigation("/cart/checkout/address");
+            return false;
+        }
+
+        if (Object.keys(payment).length === 0){
+            toast.error("Selecione a forma de pagamento.");
+            navigation("/cart/checkout/payment");
+            return false;
+        }
+
+        return true;
+    }
+    
+    const completePurchase = async () => {
+        const user = await userApi.listById(userLogged.id);
+
+        let responseOrder = await api.register({ 
+            "totalPrice" : total, 
+            shippingCost : shippingCost.price, 
+            "address": deliveryAddress, 
+            "client": user.data, 
+            payment : payment.method.id,
+            "status": "AGUARDANDO_PAGAMENTO"
+        });
+
+        console.log(responseOrder.data);
+
+        for (let product of products) {
+            await api.registerOrderItems({
+              "product": product,
+              "quantity": product.quantity,
+              "unitPrice": product.price,
+              "order": responseOrder.data
+            });
+          }          
+
+        if (responseOrder.status !== 200) {
+            toast.warn(responseOrder.error);
+            console.log(responseOrder.message);
+            return;
+        }
+        
         Cookies.remove('cart');
         Cookies.remove('shipping-cost');
         Cookies.remove('delivery-address');
         Cookies.remove('payment-method');
         
-        toast.success('Venda gerada com sucesso');
+        toast.success(`Pedido de número ${responseOrder.data.id} no valor de R$ ${responseOrder.data.totalPrice} foi gerado com sucesso`);
         navigation('/');
     }
 
@@ -56,6 +122,8 @@ export default function ViewOrder() {
     }
 
     useEffect(() => {
+        verifyCookies();
+
         calcTotal();
     }, [])
 

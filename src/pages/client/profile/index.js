@@ -2,10 +2,21 @@ import { useNavigate } from "react-router-dom";
 import * as S from './styled';
 
 import Button from "../../../components/button/index.js";
-
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 export default function ClientProfile() {
     const navigation = useNavigate();
+
+    const verifyCookie = () => {
+        const userLogged = JSON.parse(Cookies.get("user-logged-client"));
+        if (Object.keys(userLogged).length === 0) {
+            toast.error("Faça login para acessar essa página.");
+            navigation("/login");
+            return;
+        }
+    }
 
     const goToAddresses = () => {
         navigation("/address/list");
@@ -22,6 +33,11 @@ export default function ClientProfile() {
     const comeback = () => {
         navigation("/");
     };
+
+    useEffect(() => {
+        verifyCookie();
+    }
+    , []);
 
     return (
         <S.Container>
