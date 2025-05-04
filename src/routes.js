@@ -29,6 +29,7 @@ import CreateAddress from "./pages/client/addressManagement/createAddress/index.
 import ViewOrder from "./pages/client/cartCheckout/viewOrder/index.js";
 import ListAddressesCart from "./pages/client/cartCheckout/address/index.js";
 import Payment from "./pages/client/cartCheckout/payment/index.js";
+import OrderDetails from "./pages/client/orderManagement/orderDetails/index.js";
 
 export default function RoutesProject() {
     return (
@@ -64,6 +65,7 @@ export default function RoutesProject() {
                     <Route path="/profile" element={<ClientProfile />} />
                     <Route path="/profile/update" element={<ClientUpdate />} />
                     <Route path="/profile/orders" element={<ClientOrders />} />
+                    <Route path="/profile/orders/details" element={<OrderDetails />} />
                 
                     {/* Address */}
                     <Route path="/address/list" element={<ListAddresses />} />

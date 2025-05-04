@@ -62,8 +62,6 @@ export default function ViewOrder() {
     }
     
     const completePurchase = async () => {
-        if (!verifyCookies()) return;
-
         const user = await userApi.listById(userLogged.id);
 
         let responseOrder = await api.register({ 
@@ -75,26 +73,22 @@ export default function ViewOrder() {
             "status": "AGUARDANDO_PAGAMENTO"
         });
 
-        // let responseItems = await api.registerOrderItems({
-        //     "order": responseOrder.data,
-        //     "product": products.map(product => ({
-        //       "product": product,
-        //       "quantity": product.quantity,
-        //       "unitPrice": product.price
-        //     }))
-        //   });
+        console.log(responseOrder.data);
+
+        for (let product of products) {
+            await api.registerOrderItems({
+              "product": product,
+              "quantity": product.quantity,
+              "unitPrice": product.price,
+              "order": responseOrder.data
+            });
+          }          
 
         if (responseOrder.status !== 200) {
             toast.warn(responseOrder.error);
             console.log(responseOrder.message);
             return;
         }
-
-        // if (responseItems.status !== 200) {
-        //     toast.warn(responseOrder.error);
-        //     console.log(responseOrder.message);
-        //     return;
-        // }
         
         Cookies.remove('cart');
         Cookies.remove('shipping-cost');
@@ -128,6 +122,8 @@ export default function ViewOrder() {
     }
 
     useEffect(() => {
+        verifyCookies();
+
         calcTotal();
     }, [])
 

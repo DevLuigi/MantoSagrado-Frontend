@@ -14,6 +14,11 @@ export default function MyOrders() {
     const navigation = useNavigate();
     const [orders, setOrders] = useState([]);
 
+    const orderStatus = {
+        "AGUARDANDO_PAGAMENTO": "Aguardando pagamento",
+        "PAGO": "Pago"
+    }
+
     const listAllOrders = async () => {
         const userLogged = await userApi.getUserClient();
 
@@ -36,8 +41,8 @@ export default function MyOrders() {
         setOrders(response.data);
     }
 
-    const viewOrderDetails = (orderId) => {
-        navigation("/profile/my-orders/details", { state: { orderId } });
+    const viewOrderDetails = (order) => {
+        navigation("/profile/orders/details", { state: { order } });
     };
 
     const comeBack = () => {
@@ -89,10 +94,10 @@ export default function MyOrders() {
                         <S.TableRow key={order.id}>
                             <S.TableCell>{order.id}</S.TableCell>
                             <S.TableCell>{order.totalPrice}</S.TableCell>
-                            <S.TableCell>{order.status}</S.TableCell>
+                            <S.TableCell>{orderStatus[order.status]}</S.TableCell>
                             <S.TableCell>{new Date(order.createdAt).toLocaleDateString('pt-BR')}</S.TableCell>
                             <S.TableCell>
-                                <S.ActionButton onClick={() => viewOrderDetails(order.id)}>
+                                <S.ActionButton onClick={() => viewOrderDetails(order)}>
                                     Detalhes
                                 </S.ActionButton>
                             </S.TableCell>
