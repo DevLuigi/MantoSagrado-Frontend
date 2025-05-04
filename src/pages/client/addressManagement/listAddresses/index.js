@@ -21,7 +21,6 @@ export default function ListAddresses() {
     const userRegistration = Cookies.get("user-registration") ? JSON.parse(Cookies.get("user-registration")) : null;
     const userLogged = Cookies.get("user-logged-client") ? JSON.parse(Cookies.get("user-logged-client")) : null;
 
-
     const navigation = useNavigate();
 
     const userId = userRegistration?.id || userLogged?.id;
@@ -91,7 +90,7 @@ export default function ListAddresses() {
             return;
         }
 
-        const response = await api.deleteClient(userRegistration.id);
+        const response = await api.deleteClient(userId);
         if (response.status !== 204) {
             toast.error(response.error);
             console.log(response.message);

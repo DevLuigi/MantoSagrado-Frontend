@@ -23,10 +23,12 @@ import ListAddresses from "./pages/client/addressManagement/listAddresses/index.
 import CreateAddress from "./pages/client/addressManagement/createAddress/index.js";
 import ClientProfile from "./pages/client/profile/index.js";
 import ClientUpdate from "./pages/client/auth/update/index.js";
+
+import MyOrders from "./pages/client/orderManagement/listMyOrders/index.js";
 import ViewOrder from "./pages/client/cartCheckout/viewOrder/index.js";
 
+import ListAddressesCart from "./pages/client/cartCheckout/address/index.js";
 import Payment from "./pages/client/cartCheckout/payment/index.js";
-import MyOrders from "./pages/client/orderManagement/listMyOrders/index.js";
 
 export default function RoutesProject() {
     return (
@@ -64,14 +66,13 @@ export default function RoutesProject() {
                     <Route path="/profile/my-orders" element={<MyOrders />} />
                 
                     {/* Address */}
-                    <Route path="/address/list" element={<ListAddresses />}/>
-                    <Route path="/address/create" element={<CreateAddress />}/>
+                    <Route path="/address/list" element={<ListAddresses />} />
+                    <Route path="/address/create" element={<CreateAddress />} />
                 
                     {/* Cart */}
                     <Route path="/cart" element={<Cart />} />
-                    
-                    <Route path="/cart/checkout/payment" element={<Payment />}/>
-
+                    <Route path="/cart/checkout/address" element={<ListAddressesCart />} />
+                    <Route path="/cart/checkout/payment" element={<Payment />} />
                     <Route path="/client/cartCheckout/view-order" element={<ViewOrder />}/>
             </Routes>
         </BrowserRouter>
