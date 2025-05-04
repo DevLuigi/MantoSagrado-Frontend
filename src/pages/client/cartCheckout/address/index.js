@@ -82,7 +82,7 @@ export default function ListAddressesCart() {
             return;
         }
 
-        navigation(-1);
+        navigation('/cart');
     }
 
     useEffect(() => {

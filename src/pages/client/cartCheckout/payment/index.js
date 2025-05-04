@@ -11,7 +11,13 @@ import * as S from "./styled";
 import { toast } from "react-toastify";
 
 export default function Payment() {
-  const [metodoSelecionado, setMetodoSelecionado] = useState("PIX");
+  const metodos = [
+    { id: "PIX", titulo: "Pix", descricao: "" },
+    { id: "BOLETO", titulo: "Boleto bancário", descricao: "" },
+    { id: "CARTAO", titulo: "Cartão de crédito", descricao: "" },
+  ];
+
+  const [metodoSelecionado, setMetodoSelecionado] = useState(metodos[0]);
   const [form, setForm] = useState({
     numeroCartao: "",
     nomeCompleto: "",
@@ -21,12 +27,6 @@ export default function Payment() {
   });
 
   const navigation = useNavigate();
-
-  const metodos = [
-    { id: "PIX", titulo: "PIX", descricao: "" },
-    { id: "BOLETO", titulo: "BOLETO BANCÁRIO", descricao: "" },
-    { id: "CARTAO", titulo: "CARTÃO DE CRÉDITO", descricao: "" },
-  ];
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -61,12 +61,12 @@ export default function Payment() {
   };
 
   const nextStage = () => {
-    if (metodoSelecionado.trim() === "" && metodoSelecionado !== "CARTAO") return;
-    if (metodoSelecionado === "CARTAO" && !validar()) return; 
+    if (metodoSelecionado.id?.trim() === "" && metodoSelecionado.id !== "CARTAO") return;
+    if (metodoSelecionado.id === "CARTAO" && !validar()) return; 
 
     toast.success("Pagamento enviado com sucesso!");
     Cookies.set("payment-method", JSON.stringify({ "method": metodoSelecionado, "info": form }));
-    navigation("/cart/checkout/order-review");
+    navigation("/cart/checkout/view-order");
   };
 
   const comeBack = async () => {
@@ -75,7 +75,7 @@ export default function Payment() {
         return;
     }
 
-    navigation(-1);
+    navigation('/cart/checkout/address');
   }
 
   return (
@@ -92,8 +92,8 @@ export default function Payment() {
           {metodos.map((metodo) => (
             <S.Metodo
               key={metodo.id}
-              selecionado={metodoSelecionado === metodo.id}
-              onClick={() => setMetodoSelecionado(metodo.id)}
+              selecionado={metodoSelecionado.id === metodo.id}
+              onClick={() => setMetodoSelecionado(metodo)}
             >
               <S.Texto>
                 <S.TituloMetodo>{metodo.titulo}</S.TituloMetodo>
@@ -104,7 +104,7 @@ export default function Payment() {
             </S.Metodo>
           ))}
 
-          {metodoSelecionado === "CARTAO" && (
+          {metodoSelecionado.id === "CARTAO" && (
             <S.FormCartao onSubmit={nextStage}>
               <div>
                 <S.Input
@@ -156,8 +156,8 @@ export default function Payment() {
                   <option value="1">1x Sem Juros</option>
                   <option value="2">2x Sem Juros</option>
                   <option value="3">3x Sem Juros</option>
-                  <option value="6">6x Com Juros</option>
-                  <option value="12">12x Com Juros</option>
+                  <option value="6">6x Sem Juros</option>
+                  <option value="12">12x Sem Juros</option>
                 </S.Select>
               </div>
             </S.FormCartao>

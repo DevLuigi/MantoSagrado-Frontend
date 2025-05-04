@@ -16,7 +16,7 @@ export default function ClientProfile() {
     };
 
     const goToMyOrders = () => {
-        navigation("/profile/my-orders");
+        navigation("/profile/orders");
     };
 
     const comeback = () => {
