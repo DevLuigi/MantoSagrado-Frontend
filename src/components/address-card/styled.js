@@ -1,11 +1,22 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const CardContainer = styled.div`
   background: #26232c;
   color: #f3f3f3;
-  border: 1px solid #FFD700;
+  border: 2px solid #f3f3f3;
   padding: 16px;
   border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  
+  ${({ selected }) => selected && css`
+    border-color: #F3C220;
+    background-color: #1f1c24;
+  `}
+
+  &:hover {
+    border-color: #F3C220;
+  }
 
   & > .group-button {
     display: flex;
@@ -43,15 +54,12 @@ const Button = styled.button`
   cursor: pointer;
   padding: 0;
   font-size: 0.9rem;
-
   margin-left: 1em;
-
   transition: .3s;
 
   &:hover {
-    transition: .3s;
     color: #f3f3f3;
   }
 `;
 
-export { CardContainer, TitleRow, Title, Badge, Text, Button }
+export { CardContainer, TitleRow, Title, Badge, Text, Button };

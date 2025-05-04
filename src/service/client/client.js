@@ -29,6 +29,10 @@ export default class clientApi extends ServiceBase {
         return await super.get(`/${id}/address`);
     }
 
+    async listAllAddressesByDeliveryType(id) {
+        return await super.get(`/${id}/address/delivery`);
+    }
+
     async searchCep(cep) {
         return await super.get(`https://viacep.com.br/ws/${cep}/json/`);
     }

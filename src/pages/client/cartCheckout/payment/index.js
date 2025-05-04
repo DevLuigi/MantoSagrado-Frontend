@@ -35,45 +35,48 @@ export default function Payment() {
   const validar = () => {
     if (!form.numeroCartao) {
       toast.warn("Número do cartão obrigatório");
-      return;
+      return false;
     }
 
     if (!form.nomeCompleto) {
       toast.warn("Nome completo obrigatório");
-      return;
+      return false;
     }
 
     if (!form.codigoSeguranca) {
       toast.warn("Código de segurança obrigatório");
-      return;
+      return false;
     }
 
     if (!form.vencimento) {
       toast.warn("Data de vencimento obrigatória");
-      return;
+      return false;
     }
     if (!form.parcelas) {
       toast.warn("Selecione a quantidade de parcelas");
-      return;
+      return false;
     }
 
     return true;
   };
 
-  const handleSubmit = () => {
-    if (metodoSelecionado.trim() !== "" && metodoSelecionado!== "CARTAO"){
-      toast.success("Pagamento enviado com sucesso!");
-      return;
-    }
-      
-    if (validar() && metodoSelecionado === "CARTAO") {
-      toast.success("Pagamento enviado com sucesso!");
-    }
+  const nextStage = () => {
+    if (metodoSelecionado.trim() === "" && metodoSelecionado !== "CARTAO") return;
+    if (metodoSelecionado === "CARTAO" && !validar()) return; 
 
+    toast.success("Pagamento enviado com sucesso!");
     Cookies.set("payment-method", JSON.stringify({ "method": metodoSelecionado, "info": form }));
-    
     navigation("/cart/checkout/order-review");
   };
+
+  const comeBack = async () => {
+    const confirmCancel = window.confirm(`Tem certeza que deseja voltar?`);
+    if (!confirmCancel) {
+        return;
+    }
+
+    navigation(-1);
+  }
 
   return (
     <S.PagamentoContainer>
@@ -102,7 +105,7 @@ export default function Payment() {
           ))}
 
           {metodoSelecionado === "CARTAO" && (
-            <S.FormCartao onSubmit={handleSubmit}>
+            <S.FormCartao onSubmit={nextStage}>
               <div>
                 <S.Input
                   type="text"
@@ -160,16 +163,28 @@ export default function Payment() {
             </S.FormCartao>
           )}
         </div>
-        <Button 
-          myHeight={6}
-          myWidth={20}
-          myMargin={"0em 0em 2em 0em"}
-          myBackgroundColor={"#F3C220"}
-          myColor={"white"}
-          myMethod={handleSubmit}
-        >
-          Finalizar Pagamento
-        </Button>
+        <S.GroupButton>
+          <Button 
+            myHeight={6}
+            myWidth={17.5}
+            myMargin={"0em 1em 1em 0em"}
+            myBackgroundColor={"#F3C220"}
+            myColor={"white"}
+            myMethod={comeBack}
+          >
+            Voltar
+          </Button>
+          <Button 
+            myHeight={6}
+            myWidth={17.5}
+            myMargin={"0em 0em 1em 0em"}
+            myBackgroundColor={"#F3C220"}
+            myColor={"white"}
+            myMethod={nextStage}
+          >
+            Avançar
+          </Button>
+        </S.GroupButton>
       </AuthBox>
     </S.PagamentoContainer>
   );
