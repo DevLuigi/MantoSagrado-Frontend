@@ -30,7 +30,7 @@ export default class ServiceBase {
     }
 
     getUserAdmin() {
-        let logged = Cookies.get('user-logged');
+        let logged = Cookies.get('user-logged-admin');
         if (logged) {
             let cookie = JSON.parse(logged);
             return cookie;

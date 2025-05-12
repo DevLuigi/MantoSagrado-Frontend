@@ -46,10 +46,10 @@ export default function Login() {
     return(
         <Container>
             <Link to={"/"}>
-                <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo-image"/>
+                <img src="/assets/images/icon_logo_sem_fundo.png" alt="logo da empresa"/>
             </Link>
             <AuthBox myWidth={40} myHeight={60}>
-                <h3> Acesse sua conta </h3>
+                <h3> Login de administrador </h3>
                 <hr />
                 <div>
                     <Input 

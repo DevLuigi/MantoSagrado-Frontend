@@ -16,7 +16,11 @@ export default function MyOrders() {
 
     const orderStatus = {
         "AGUARDANDO_PAGAMENTO": "Aguardando pagamento",
-        "PAGO": "Pago"
+        "PAGAMENTO_REJEITADO": "Pagamento rejeitado",
+        "PAGAMENTO_COM_SUCESSO": "Pagamento com sucesso",
+        "AGUARDANDO_RETIRADA": "Aguardando retirada",
+        "EM_TRANSITO": "Em trânsito",
+        "ENTREGUE": "Entregue"
     }
 
     const listAllOrders = async () => {

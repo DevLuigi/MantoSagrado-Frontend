@@ -36,18 +36,20 @@ export default function Header({ cart }) {
 
             <S.NavWrapper>
                 <S.NavLinks>
-                    <User
-                        size={24}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate("/profile")}
-                    />
                     {
                         isLogged ?
-                            <LogOut
-                                size={24}
-                                style={{ cursor: "pointer" }}
-                                onClick={handleLogout}
-                            /> 
+                            <>
+                                <User
+                                    size={24}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/profile")}
+                                />
+                                <LogOut
+                                    size={24}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={handleLogout}
+                                /> 
+                            </>
                         :
                             <LogIn 
                                 size={24}
