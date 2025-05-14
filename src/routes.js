@@ -12,6 +12,8 @@ import ProductRegisterAdmin from "./pages/admin/product/register";
 import ProductUpdateAdmin from "./pages/admin/product/update";
 import ProductPreview from "./pages/admin/product/productPreview/index.js";
 
+import OrderManagementAdmin from "./pages/admin/orders/management";
+
 import Cart from "./pages/client/cart/index.js";
 import Shop from "./pages/client/shop/index.js";
 
@@ -49,6 +51,9 @@ export default function RoutesProject() {
                     <Route path="/admin/product/register" element={<ProductRegisterAdmin />} />
                     <Route path="/admin/product/update" element={<ProductUpdateAdmin />} />
                     <Route path="/admin/product/product-preview" element={<ProductPreview />} />
+
+                    {/* Orders */}
+                    <Route path="/admin/order/management" element={<OrderManagementAdmin />} />
                 
                 {/* ========================================================================== */}
                 {/* Client routes */}
