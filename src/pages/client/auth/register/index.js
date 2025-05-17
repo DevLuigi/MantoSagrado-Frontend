@@ -16,7 +16,6 @@ const api = new clientApi();
 
 export default function ClientRegister() {
     const [name, setName] = useState("");
-    const [lastName, setLastName] = useState("");
     const [cpf, setCpf] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -29,7 +28,7 @@ export default function ClientRegister() {
     const navigation = useNavigate();
 
     const isFormCompleted = Object.values(
-        [email, password, confirmPassword, name, lastName, cpf, birthDate, gender]
+        [email, password, confirmPassword, name, cpf, birthDate, gender]
     ).every((value) => value.trim() !== "");
 
     const isInvalidEmail = () => {
@@ -68,7 +67,7 @@ export default function ClientRegister() {
             return;
         }
 
-        let response = await api.register({ email, password, confirmPassword, name, lastName, cpf, birthDate, gender });
+        let response = await api.register({ email, password, confirmPassword, name, cpf, birthDate, gender });
         
         if(response.status !== 200){
             toast.warn(response.error);
@@ -107,17 +106,6 @@ export default function ClientRegister() {
                         myPlaceHolder="João Silva"
                     >
                         Seu Nome
-                    </Input>
-
-                    <Input
-                        myGetter={lastName}
-                        mySetter={setLastName}
-                        myMargin={"1.5em 0em"}
-                        myHeight={7}
-                        myWidth={28}
-                        myPlaceHolder="João Silva"
-                    >
-                        Seu Sobrenome
                     </Input>
 
                     <Input
