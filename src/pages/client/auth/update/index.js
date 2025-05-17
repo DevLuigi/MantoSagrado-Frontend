@@ -17,7 +17,6 @@ const api = new clientApi();
 export default function ClientUpdate() {
     const [id, setId] = useState(0);
     const [name, setName] = useState("");
-    const [lastName, setLastName] = useState("");
     const [cpf, setCpf] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,7 +31,7 @@ export default function ClientUpdate() {
     const navigation = useNavigate();
 
     const isFormCompleted = Object.values(
-        [email, password, confirmPassword, name, lastName, cpf, birthDate, gender]);
+        [email, password, confirmPassword, name, cpf, birthDate, gender]);
 
     const isInvalidEmail = () => {
         const emailRegex = /^[a-zA-Z0-9.+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
@@ -75,7 +74,6 @@ export default function ClientUpdate() {
             email,
             password,
             name,
-            lastName,
             cpf,
             birthDate,
             gender            
@@ -104,7 +102,6 @@ export default function ClientUpdate() {
     
             setId(user.data.id);
             setName(user.data.name);
-            setLastName(user.data.lastName);
             setEmail(user.data.email);
             setCpf(user.data.cpf);
             setBirthDate(user.data.birthDate);
@@ -146,17 +143,6 @@ export default function ClientUpdate() {
                         myPlaceHolder="João Silva"
                     >
                         Seu Nome
-                    </Input>
-
-                    <Input
-                        myGetter={lastName}
-                        mySetter={setLastName}
-                        myMargin={"1.5em 0em"}
-                        myHeight={7}
-                        myWidth={28}
-                        myPlaceHolder="João Silva"
-                    >
-                        Seu Sobrenome
                     </Input>
 
                     <Input
