@@ -118,6 +118,11 @@ export default function OrderDetails() {
                     </S.Section>
 
                     <S.Section>
+                        <S.Title>Forma de pagamento</S.Title>
+                        <S.InfoLine>{payment}</S.InfoLine>
+                    </S.Section>
+
+                    <S.Section>
                         <S.Title>Endereço: {deliveryAddress?.identification}</S.Title>
                         <S.InfoLine>{deliveryAddress?.neighborhood}</S.InfoLine>
                         <S.InfoLine>{deliveryAddress?.streetAddress}, {deliveryAddress?.number} – {deliveryAddress?.complement}</S.InfoLine>
