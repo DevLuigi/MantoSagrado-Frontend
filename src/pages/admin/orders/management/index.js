@@ -31,7 +31,7 @@ export default function ProductManagementScreen() {
 
   const filteredOrders = orders?.filter(
     (order) =>
-      (order.client.name.toLowerCase()+' '+order.client.lastName.toLowerCase()).includes(searchTerm.toLowerCase()) ||
+      (order.client.name.toLowerCase()).includes(searchTerm.toLowerCase()) ||
       order.client.cpf.toLowerCase().includes(searchTerm.toLowerCase()) ||  
       order.payment.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -128,7 +128,7 @@ export default function ProductManagementScreen() {
             <S.TableRow key={order.id}>
               <S.TableCell>{order.id}</S.TableCell>
               <S.TableCell>{new Date(order.createdAt).toLocaleDateString('pt-BR')}</S.TableCell>
-              <S.TableCell>{order.client.name + ' ' + order.client.lastName + ' - ' + order.client.cpf}</S.TableCell>
+              <S.TableCell>{order.client.name + ' - ' + order.client.cpf}</S.TableCell>
               <S.TableCell>{paymentMethods[order.payment]}</S.TableCell>
               <S.TableCell>{order.totalPrice}</S.TableCell>
               <S.TableCell>{orderStatus[order.status]}</S.TableCell>
