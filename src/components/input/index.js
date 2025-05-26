@@ -4,7 +4,8 @@ export default function Input(props) {
     return(
         <Container style={props}>
             <p> {props?.children} </p>
-            <input  
+            <input 
+                id={props?.myId} 
                 type={props?.myType} 
                 disabled={props?.myDisabled} 
                 placeholder={props?.myPlaceHolder} 
