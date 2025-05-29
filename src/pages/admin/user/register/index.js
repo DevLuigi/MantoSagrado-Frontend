@@ -35,12 +35,12 @@ export default function Register() {
 
     const register = async () => {
         if (!isFormCompleted) {
-            toast.warn("Preencha todos os campos !")
+            toast.warn("Preencha todos os campos!");
             return;
         }
 
         if (password !== confirmPassword) {
-            toast.warn("As senhas não são iguais !")
+            toast.warn("As senhas não são iguais!");
             return;
         }
 
