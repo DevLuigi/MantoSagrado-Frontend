@@ -48,12 +48,12 @@ export default function ClientRegister() {
 
     const register = async () => {
         if (!isFormCompleted) {
-            toast.warn("Preencha todos os campos !")
+            toast.warn("Preencha todos os campos!");
             return;
         }
 
         if (password !== confirmPassword) {
-            toast.warn("As senhas não são iguais !")
+            toast.warn("As senhas não são iguais!");
             return;
         }
 
@@ -98,6 +98,7 @@ export default function ClientRegister() {
                 <hr />
                 <div>
                     <Input
+                        myId={"name"}
                         myGetter={name}
                         mySetter={setName}
                         myMargin={"1.5em 0em"}
@@ -109,6 +110,7 @@ export default function ClientRegister() {
                     </Input>
 
                     <Input
+                        myId={"cpf"}
                         myGetter={cpf}
                         mySetter={setCpf}
                         myMargin={"1.5em 0em"}
@@ -120,6 +122,7 @@ export default function ClientRegister() {
                     </Input>
 
                     <Input
+                        myId={"email"}
                         myGetter={email}
                         mySetter={setEmail}
                         myMargin={"1.5em 0em"}
@@ -131,6 +134,7 @@ export default function ClientRegister() {
                     </Input>
 
                     <Input
+                        myId={"birthDate"}
                         myGetter={birthDate}
                         mySetter={setBirthDate}
                         myMargin={"1.5em 0em"}
@@ -142,6 +146,7 @@ export default function ClientRegister() {
                     </Input>
 
                     <Input
+                        myId={"password"}
                         myGetter={password}
                         mySetter={setPassword}
                         myMargin={"1.5em 0em"}
@@ -154,6 +159,7 @@ export default function ClientRegister() {
                     </Input>
 
                     <Input
+                        myId={"confirmPassword"}
                         myGetter={confirmPassword}
                         mySetter={setConfirmPassword}
                         myMargin={"1.5em 0em"}
@@ -185,6 +191,7 @@ export default function ClientRegister() {
                     
                     <div className="button-group">
                         <Button
+                            myId={"submit"}
                             myMargin={"1.5em 1em 1.5em 0em"}
                             myHeight={5}
                             myWidth={14}
@@ -195,6 +202,7 @@ export default function ClientRegister() {
                             Cadastrar
                         </Button>
                         <Button
+                            myId={"cancel"}
                             myMargin={"1.5em 0em"}
                             myHeight={5}
                             myWidth={14}

@@ -28,7 +28,7 @@ export default function Login() {
         const response = await api.login({email, password});
         
         if(response.status === 404) {
-            toast.error("Crendenciais inválidas");
+            toast.error("Credenciais inválidas");
             return;
         };
 
@@ -53,6 +53,7 @@ export default function Login() {
                 <hr />
                 <div>
                     <Input 
+                        myId={"email"}
                         myGetter={email} 
                         mySetter={setEmail} 
                         myMargin={"1.5em 0em"} 
@@ -62,6 +63,7 @@ export default function Login() {
                         Seu e-mail 
                     </Input>
                     <Input 
+                        myId={"password"}
                         myGetter={password} 
                         mySetter={setPassword} 
                         myMargin={"1.5em 0em"} 
@@ -72,6 +74,7 @@ export default function Login() {
                         Sua senha 
                     </Input>
                     <Button
+                        myId={"submit"}
                         myHeight={6}
                         myWidth={29}
                         myBackgroundColor={"#007bff"}
